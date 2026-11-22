@@ -1,0 +1,1038 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard estadístico de KPIs</title>
+<style>
+:root{--bg:#f3f5f7;--card:#fff;--ink:#16202b;--mute:#5d6b7a;--line:#d8dee5;--acc:#0b6b8a;--good:#dff3e6;--goodink:#14653a;--warn:#fdeccf;
+--s0:#1f77b4;--s1:#e08a1e;--s2:#2e9e5b;--s3:#b23a7f;--s4:#6b5bd2;--s5:#8a6d3b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161d;--card:#18212b;--ink:#e6edf3;--mute:#94a3b3;--line:#2b3846;--acc:#5cc0df;--good:#173a27;--goodink:#7fdcA5;--warn:#4a3813}}
+:root[data-theme="dark"]{--bg:#10161d;--card:#18212b;--ink:#e6edf3;--mute:#94a3b3;--line:#2b3846;--acc:#5cc0df;--good:#173a27;--goodink:#7fdca5;--warn:#4a3813}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:8px 0 2px}h2{font-size:1.05rem;margin:0 0 10px}
+.sub{color:var(--mute);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+label{display:flex;flex-direction:column;font-size:.8rem;color:var(--mute);gap:3px;flex:1;min-width:130px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px}
+textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;resize:vertical}
+button.b{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer}
+button.b:hover{border-color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.hint{font-size:.8rem;color:var(--mute);margin:6px 0 0}
+.err{color:#c0392b;font-size:.85rem}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--card)}
+th{font-weight:600}
+td.best{background:var(--good);color:var(--goodink);font-weight:600}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.ins{margin:0;padding-left:18px}.ins li{margin:3px 0}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--mute);font:11px system-ui,sans-serif}
+svg .ax{stroke:var(--line)}
+.cap{font-size:.82rem;color:var(--mute);margin:6px 0 0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;margin-bottom:6px}
+.num{width:72px;text-align:right}.j{width:100%;min-width:200px}td span.cap{font-weight:400}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chip{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.82rem;color:var(--mute)}.chip.ok{background:var(--good);color:var(--goodink);border-color:transparent}
+[hidden]{display:none!important}
+.steps{margin:0;padding-left:22px}.steps li{margin:0 0 16px}.steps p{margin:3px 0}
+.fm{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 8px;display:inline-block;max-width:100%;overflow-wrap:anywhere}
+.vd{display:inline-block;margin-top:6px;padding:6px 12px;border-radius:8px;font-weight:700}.vd.rej{background:var(--warn);color:var(--ink)}.vd.keep{background:var(--good);color:var(--goodink)}
+.hg{margin-top:8px;max-width:700px}.dt{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-top:8px}.dt summary{cursor:pointer;font-weight:600}
+.vtabs{margin:6px 0 14px}
+#hsaved td:nth-child(2),#hsaved th:nth-child(2),#hsaved th:nth-child(3){text-align:left}
+button.b:disabled{opacity:.5;cursor:not-allowed}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}.pk{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.pk:hover{border-color:var(--acc)}.pk.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc) inset;background:var(--card)}
+.pn{width:22px;height:22px;border-radius:50%;background:var(--acc);color:var(--card);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-bottom:2px}.pt{font-weight:700}.ps{font-size:.78rem;color:var(--mute)}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:8px 0}.dc{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg)}.dc span{display:block;font-size:.78rem;color:var(--mute)}.dc b{font-size:.95rem;overflow-wrap:anywhere}
+.fb{border-left:4px solid var(--acc);background:var(--bg);border-radius:0 8px 8px 0;padding:8px 12px;margin:8px 0}.fl{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);font-weight:700}
+.mx{font-size:1.05rem;padding:6px 0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.mx.res{font-weight:700}.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;text-align:center}.fr>span:first-child{border-bottom:1.5px solid var(--ink);padding:0 4px 2px}.fr>span:last-child{padding:2px 4px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Dashboard estadístico de KPIs</h1>
+
+<div class="tabs vtabs" id="vtabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-v="desc">Estadística descriptiva</button><button class="tab" role="tab" aria-selected="false" data-v="hyp">Contraste de hipótesis</button><button class="tab" role="tab" aria-selected="false" data-v="proj">Probabilidad</button></div>
+<div id="v-desc">
+<div class="card">
+  <div class="tabs" id="tabs" role="tablist"></div>
+  <div class="row">
+    <label>Nombre del KPI<input id="kname"></label>
+    <label>Unidad<input id="kunit" placeholder="ms, %, Mbps"></label>
+    <label>¿Qué es mejor?<select id="kbetter"><option value="low">Menor es mejor</option><option value="high">Mayor es mejor</option></select></label>
+  </div>
+  <textarea id="raw" spellcheck="false" aria-label="Datos crudos"></textarea>
+  <p class="hint">Primera fila: nombres de cada sistema. Una columna por sistema, un dato por fila. Acepta pegar desde Excel (tabulador), CSV o punto y coma. Si la primera columna es «Día» o similar, se ignora.</p>
+  <div class="row" style="margin:10px 0 0">
+    <button class="b" id="addk">Agregar KPI</button>
+    <button class="b" id="delk">Eliminar este KPI</button>
+    
+  </div>
+  <div class="err" id="err"></div>
+</div>
+
+<div id="out"></div>
+<div id="dec"></div>
+</div>
+<div id="v-proj" hidden></div>
+<div id="v-hyp" hidden>
+<div id="hform" class="card"></div>
+<div id="hres"></div>
+<div id="hsaved"></div>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const COLORS=['--s0','--s1','--s2','--s3','--s4','--s5'];
+const col=i=>`var(${COLORS[i%COLORS.length]})`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let kpis=[],cur=0;
+
+/* ---------- estadística ---------- */
+const sum=a=>a.reduce((x,y)=>x+y,0);
+function pct(s,p){const h=(s.length-1)*p,l=Math.floor(h);return s[l]+(h-l)*((s[l+1]??s[l])-s[l]);}
+function stats(d){
+  const n=d.length;if(!n)return null;
+  const s=[...d].sort((a,b)=>a-b),m=sum(d)/n;
+  const v=n>1?sum(d.map(x=>(x-m)**2))/(n-1):NaN,sd=Math.sqrt(v);
+  const f=new Map();d.forEach(x=>f.set(x,(f.get(x)||0)+1));
+  let mo=null,mf=1;[...f].sort((a,b)=>a[0]-b[0]).forEach(([x,c])=>{if(c>mf){mf=c;mo=x;}});
+  const q1=pct(s,.25),q3=pct(s,.75),iqr=q3-q1,lo=q1-1.5*iqr,hi=q3+1.5*iqr;
+  const out=d.map((x,i)=>({x,i})).filter(o=>o.x<lo||o.x>hi);
+  const inl=s.filter(x=>x>=lo&&x<=hi);
+  return{n,mean:m,med:pct(s,.5),mode:mo,sd,v,min:s[0],max:s[n-1],range:s[n-1]-s[0],q1,q3,iqr,cv:m?sd/Math.abs(m)*100:NaN,
+    out,wl:inl[0],wh:inl[inl.length-1]};
+}
+const fx=(x,k=2)=>Number.isFinite(x)?x.toLocaleString('es-MX',{minimumFractionDigits:k,maximumFractionDigits:k}):'—';
+
+/* ---------- lectura de datos ---------- */
+function parse(text){
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return[];
+  const h=lines[0],sep=h.includes('\t')?'\t':h.includes(';')?';':h.includes(',')?',':/\s{2,}|\s/;
+  const rows=lines.map(l=>l.split(sep).map(s=>s.trim()));
+  const num=s=>parseFloat((sep===','?s:s.replace(',','.')));
+  const hasH=rows[0].some(c=>c!==''&&isNaN(num(c)));
+  let names=hasH?rows.shift():null,start=0;
+  if(names&&/^(d[ií]a|day|n[°ºo]?|id|#|muestra|fecha|obs\w*)$/i.test(names[0])&&names.length>1)start=1;
+  else if(!names&&rows.length&&rows[0].length>1&&rows.every((r,i)=>+r[0]===i+1))start=1;
+  const nc=Math.max(...rows.map(r=>r.length),names?names.length:0);
+  const out=[];
+  for(let c=start;c<nc;c++){
+    out.push({name:(names&&names[c])||`Sistema ${c-start+1}`,data:rows.map(r=>num(r[c]??'')).filter(Number.isFinite)});
+  }
+  return out.filter(s=>s.data.length);
+}
+
+/* ---------- muestra ---------- */
+function gauss(m,s){let u=0,v=0;while(!u)u=Math.random();v=Math.random();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function sample(){
+  kpis=[{"name": "Latencia", "unit": "ms", "better": "low", "raw": "Día\tProveedor A\tProveedor B\tProveedor C\n1\t41.5\t23.8\t24.9\n2\t41.2\t39.7\t23.2\n3\t30.1\t27.4\t22\n4\t37.4\t39.6\t22\n5\t40.3\t40\t22.2\n6\t39.7\t118.4\t24.2\n7\t33.9\t28.2\t26.6\n8\t35\t29.1\t21.7\n9\t39\t27.9\t21.3\n10\t33.1\t21.7\t24.8\n11\t37.2\t22\t30.7\n12\t31.2\t34.3\t20.8\n13\t38\t20.9\t20.9\n14\t32.7\t24.6\t23.1\n15\t38.3\t38\t142.3\n16\t43.5\t37.1\t22.1\n17\t43.7\t30\t24.9\n18\t42.7\t96.7\t21.2\n19\t31\t10\t18.9\n20\t40.3\t31.1\t24.7\n21\t35.6\t29.5\t22.1\n22\t32.5\t39.4\t24.9\n23\t44\t39.2\t23.9\n24\t44\t25.4\t24.6\n25\t44\t28\t22.1\n26\t36.8\t29.8\t21.2\n27\t43.4\t30.8\t21.1\n28\t23\t34.7\t24.8\n29\t36.4\t43.4\t18.4\n30\t37.9\t34.3\t24.4"}, {"name": "Velocidad de descarga", "unit": "Mbps", "better": "high", "raw": "Día\tProveedor A\tProveedor B\tProveedor C\n1\t91.8\t100\t95.1\n2\t95.5\t96.9\t95.3\n3\t86.4\t88.2\t98.3\n4\t91.6\t100\t97.6\n5\t93.4\t88.3\t96.8\n6\t88.4\t31.5\t95.6\n7\t96.7\t81\t92.9\n8\t88.9\t75.6\t97.7\n9\t89.3\t92.9\t97.4\n10\t98.1\t95.2\t95.4\n11\t89.5\t73.1\t94.2\n12\t89.5\t79.5\t96.5\n13\t89.5\t99.1\t94.5\n14\t88.5\t84.4\t95.9\n15\t84.6\t87\t38.9\n16\t94.3\t82.7\t94.2\n17\t97.6\t90.3\t95.4\n18\t90.8\t44.2\t93.9\n19\t90.9\t100\t92.9\n20\t92.1\t82.7\t94.7\n21\t91.6\t83.8\t93.6\n22\t95.5\t87.9\t97.3\n23\t96.1\t76.5\t94.7\n24\t94.8\t67.6\t94.3\n25\t89.2\t92.6\t93.9\n26\t93.7\t66.3\t95.8\n27\t92.1\t84.4\t95.5\n28\t92\t97.7\t94.7\n29\t85.9\t92.3\t91.3\n30\t88.6\t76.7\t93.9"}, {"name": "Pérdida de paquetes", "unit": "%", "better": "low", "raw": "Día\tProveedor A\tProveedor B\tProveedor C\n1\t0.28\t1.73\t0.17\n2\t0.7\t3.47\t0.16\n3\t0.72\t2.33\t0.22\n4\t0.5\t0.7\t0.44\n5\t0.5\t0.33\t0.23\n6\t0.5\t7.8\t0.33\n7\t0.26\t2.2\t0.25\n8\t0.53\t0.53\t0.29\n9\t0.1\t2.22\t0.07\n10\t0.55\t1.32\t0.36\n11\t0.81\t2.07\t0.27\n12\t0.93\t2.36\t0.15\n13\t0.44\t0.61\t0.29\n14\t0.73\t1.06\t0.25\n15\t0.53\t2.48\t6.1\n16\t0.64\t2.31\t0.26\n17\t0.54\t0.53\t0.2\n18\t0.77\t5.4\t0.13\n19\t0.58\t1.65\t0.34\n20\t0.83\t2.15\t0.21\n21\t0.64\t1.38\t0.28\n22\t0.4\t2.51\t0.12\n23\t0.43\t2\t0.17\n24\t0.64\t1.87\t0.14\n25\t0.5\t1.97\t0.33\n26\t0.61\t1.36\t0.21\n27\t0.7\t0.96\t0.27\n28\t0.26\t0.26\t0.36\n29\t0.76\t1.41\t0.45\n30\t0.24\t1\t0.22"}];
+  cur=0;drawTabs();load();
+}
+
+/* ---------- gráficos SVG ---------- */
+const W=640,H=310,M={l:62,r:14,t:16,b:56};
+const axT=(xl,yl)=>`<text x="${M.l+(W-M.l-M.r)/2}" y="${H-6}" text-anchor="middle" style="fill:var(--ink)">${esc(xl)}</text><text transform="translate(14 ${M.t+(H-M.t-M.b)/2}) rotate(-90)" text-anchor="middle" style="fill:var(--ink)">${esc(yl)}</text>`;
+const yl=k=>k.name+(k.unit?` (${k.unit})`:'');
+function scale(min,max){
+  if(min===max){min-=1;max+=1;}
+  const step=(max-min)/4,mag=10**Math.floor(Math.log10(step)),nice=[1,2,2.5,5,10].find(k=>k*mag>=step)*mag;
+  const a=Math.floor(min/nice)*nice,b=Math.ceil(max/nice)*nice,t=[];
+  for(let v=a;v<=b+nice/1e6;v+=nice)t.push(+v.toFixed(10));
+  return{a,b,t};
+}
+function frame(sc){
+  const y=v=>M.t+(H-M.t-M.b)*(1-(v-sc.a)/(sc.b-sc.a));
+  const g=sc.t.map(v=>`<line class="ax" x1="${M.l}" x2="${W-M.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${M.l-6}" y="${y(v)+4}" text-anchor="end">${fx(v,sc.b-sc.a<5?1:0)}</text>`).join('');
+  return{y,g};
+}
+function barChart(ser,ss,k){
+  const mx=Math.max(...ss.map(s=>s.mean));const sc=scale(0,mx*1.1),{y,g}=frame(sc);
+  const bw=(W-M.l-M.r)/ser.length;
+  const b=ser.map((s,i)=>{const x=M.l+bw*i+bw*.2,w=bw*.6,yy=y(ss[i].mean);
+    return`<rect x="${x}" y="${yy}" width="${w}" height="${y(0)-yy}" rx="3" fill="${col(i)}"/><text x="${x+w/2}" y="${yy-5}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${fx(ss[i].mean)}</text><text x="${x+w/2}" y="${H-30}" text-anchor="middle">${esc(s.name)}</text>`}).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Media por sistema">${g}${b}${axT('Sistema','Media de '+yl(k))}</svg>`;
+}
+function lineChart(ser,ss,k){
+  const all=ser.flatMap(s=>s.data),sc=scale(Math.min(...all),Math.max(...all)),{y,g}=frame(sc);
+  const N=Math.max(...ser.map(s=>s.data.length)),x=i=>M.l+(W-M.l-M.r)*(N>1?i/(N-1):.5);
+  const step=Math.ceil(N/10);let xt='';for(let i=0;i<N;i+=step)xt+=`<text x="${x(i)}" y="${H-30}" text-anchor="middle">${i+1}</text>`;
+  const l=ser.map((s,k)=>`${s.data.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="${col(k)}" fill-opacity=".8"/>`).join('')}`+
+    ss[k].out.map(o=>`<circle cx="${x(o.i)}" cy="${y(o.x)}" r="7" fill="none" stroke="${col(k)}" stroke-width="2"/><text x="${x(o.i)+10}" y="${y(o.x)+4}" style="fill:var(--ink);font-size:10px">${fx(o.x,1)}</text>`).join('')).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Diagrama de dispersión">${g}${xt}${l}${axT('Observación (n.º de día / muestra)',yl(k))}</svg>`;
+}
+function boxChart(ser,ss,k){
+  const all=ser.flatMap(s=>s.data),sc=scale(Math.min(...all),Math.max(...all)),{y,g}=frame(sc);
+  const bw=(W-M.l-M.r)/ser.length;
+  const b=ser.map((s,i)=>{const t=ss[i],cx=M.l+bw*(i+.5),w=Math.min(70,bw*.5),c=col(i);
+    return`<line x1="${cx}" x2="${cx}" y1="${y(t.wl)}" y2="${y(t.wh)}" stroke="${c}" stroke-width="1.5"/>
+<line x1="${cx-w/4}" x2="${cx+w/4}" y1="${y(t.wl)}" y2="${y(t.wl)}" stroke="${c}" stroke-width="1.5"/><line x1="${cx-w/4}" x2="${cx+w/4}" y1="${y(t.wh)}" y2="${y(t.wh)}" stroke="${c}" stroke-width="1.5"/>
+<rect x="${cx-w/2}" y="${y(t.q3)}" width="${w}" height="${Math.max(1,y(t.q1)-y(t.q3))}" fill="${c}" fill-opacity=".25" stroke="${c}" stroke-width="1.5"/>
+<line x1="${cx-w/2}" x2="${cx+w/2}" y1="${y(t.med)}" y2="${y(t.med)}" stroke="${c}" stroke-width="3"/>
+<circle cx="${cx}" cy="${y(t.mean)}" r="3.5" fill="var(--card)" stroke="${c}" stroke-width="1.5"/>
+${t.out.map(o=>`<circle cx="${cx}" cy="${y(o.x)}" r="3.5" fill="${c}"/>`).join('')}
+${[[t.q3,'Q3'],[t.med,'Med'],[t.q1,'Q1']].map(([v,n])=>`<text x="${cx+w/2+5}" y="${y(v)+4}" style="font-size:10px">${n} ${fx(v,1)}</text>`).join('')}
+<text x="${cx}" y="${H-30}" text-anchor="middle">${esc(s.name)}</text>`}).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Diagrama de caja y bigote">${g}${b}${axT('Sistema',yl(k))}</svg>`;
+}
+
+/* ---------- render ---------- */
+const ROWS=[['Media','mean','a'],['Mediana','med','a'],['Moda','mode'],['Desviación estándar','sd','v'],['Varianza','v'],['Mínimo','min'],['Máximo','max'],['Rango','range','v'],
+ ['Percentil 25 (Q1)','q1'],['Percentil 75 (Q3)','q3'],['Rango intercuartílico','iqr','v'],['Coef. de variación (%)','cv','v'],['Valores atípicos (1.5·IQR)','nout']];
+function render(){renderMain();renderDec();if(window.hyRefresh)hyRefresh();}
+function renderMain(){
+  const k=kpis[cur],out=document.getElementById('out'),err=document.getElementById('err');
+  const ser=parse(k.raw);err.textContent='';
+  if(!ser.length){out.innerHTML='<div class="card"><p class="hint">Aún no hay datos. Pega una tabla o pulsa «Cargar ejemplo».</p></div>';return;}
+  const ss=ser.map(s=>stats(s.data));ss.forEach(t=>t.nout=t.out.length);
+  const u=k.unit?` (${esc(k.unit)})`:'';
+  const best=(key,dir)=>{const vals=ss.map(t=>t[key]);const t=dir==='min'?Math.min(...vals.filter(Number.isFinite)):Math.max(...vals.filter(Number.isFinite));return vals.indexOf(t);};
+  const goal=k.better==='low'?'min':'max';
+  const bestIdx={};ROWS.forEach(r=>{if(r[2]==='a')bestIdx[r[1]]=best(r[1],goal);if(r[2]==='v')bestIdx[r[1]]=best(r[1],'min');});
+  const head=`<tr><th>Estadístico</th>${ser.map((s,i)=>`<th><span class="dot" style="background:${col(i)}"></span>${esc(s.name)}</th>`).join('')}</tr>`;
+  const body=ROWS.map(r=>`<tr><td>${r[0]}</td>${ss.map((t,i)=>{const v=t[r[1]];return`<td class="${bestIdx[r[1]]===i&&ser.length>1?'best':''}">${r[1]==='nout'?v:fx(v)}</td>`}).join('')}</tr>`).join('');
+  const ins=[];
+  if(ser.length>1){
+    ins.push(`Mejor promedio: <b>${esc(ser[bestIdx.mean].name)}</b> (${fx(ss[bestIdx.mean].mean)}${esc(k.unit)}).`);
+    const cvI=bestIdx.cv;ins.push(`Más estable (menor CV): <b>${esc(ser[cvI].name)}</b> (${fx(ss[cvI].cv)} %).`+(cvI===bestIdx.mean?' Coincide con el mejor promedio.':' No coincide con el mejor promedio.'));
+  }
+  ser.forEach((s,i)=>{const t=ss[i];if(t.nout)ins.push(`<b>${esc(s.name)}</b>: ${t.nout} valor(es) atípico(s) (obs. ${t.out.map(o=>o.i+1).join(', ')}). Media ${fx(t.mean)} vs. mediana ${fx(t.med)}: ${Math.abs(t.mean-t.med)>t.sd*.15?'la media está sesgada por los extremos.':'diferencia pequeña.'}`);});
+  if(!ins.length)ins.push('Sin valores atípicos detectados.');
+  const vt=(rows)=>`<div class="tw"><table><tr><th>Valor graficado</th>${ser.map(s=>`<th>${esc(s.name)}</th>`).join('')}</tr>${rows.map(r=>`<tr><td>${r[0]}</td>${ss.map(t=>`<td>${r[1](t)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  const legend=`<div class="legend">${ser.map((s,i)=>`<span><span class="dot" style="background:${col(i)}"></span>${esc(s.name)} (n=${ss[i].n})</span>`).join('')}</div>`;
+  out.innerHTML=`
+<div class="card"><h2>Resumen · ${esc(k.name)}${u}</h2><ul class="ins">${ins.map(i=>`<li>${i}</li>`).join('')}</ul>
+<p class="cap">Verde = mejor valor de la fila (${k.better==='low'?'menor':'mayor'} es mejor en media y mediana; menor en dispersión).</p></div>
+<div class="card"><h2>Estadísticos descriptivos</h2><div class="tw"><table>${head}${body}</table></div>
+<p class="cap">Desviación y varianza muestrales (n−1); percentiles con método inclusivo, igual que PERCENTIL.INC de Excel.</p></div>
+<div class="card"><h2>Media de ${esc(k.name)}${u} por sistema</h2>${barChart(ser,ss,k)}${vt([['Media',t=>fx(t.mean)]])}<p class="cap">Compara el promedio de ${esc(k.name)}${u} entre sistemas.</p></div>
+<div class="card"><h2>Dispersión de ${esc(k.name)}${u} por observación y sistema</h2>${legend}${lineChart(ser,ss,k)}<p class="cap">Cada punto es una observación; los aros marcan valores atípicos y su altura muestra la variabilidad de cada sistema.</p>${vt([['Observaciones (n)',t=>t.n],['Mínimo',t=>fx(t.min)],['Máximo',t=>fx(t.max)]])}</div>
+<div class="card"><h2>Distribución de ${esc(k.name)}${u} · caja y bigote</h2>${legend}${boxChart(ser,ss,k)}<p class="cap">Caja = Q1–Q3, línea gruesa = mediana, círculo blanco = media, puntos = atípicos. Bigotes: último dato dentro de 1.5·IQR.</p>${vt([['Límite inferior bigote',t=>fx(t.wl)],['Q1',t=>fx(t.q1)],['Mediana',t=>fx(t.med)],['Q3',t=>fx(t.q3)],['Límite superior bigote',t=>fx(t.wh)],['Media',t=>fx(t.mean)]])}</div>`;
+}
+
+/* ---------- interfaz ---------- */
+function drawTabs(){
+  const t=document.getElementById('tabs');
+  t.innerHTML=kpis.map((k,i)=>`<button class="tab" role="tab" aria-selected="${i===cur}" data-i="${i}">${esc(k.name||'KPI '+(i+1))}</button>`).join('');
+}
+function load(){
+  const k=kpis[cur];
+  kname.value=k.name;kunit.value=k.unit;kbetter.value=k.better;raw.value=k.raw;render();
+}
+tabs.onclick=e=>{const b=e.target.closest('.tab');if(!b)return;cur=+b.dataset.i;drawTabs();load();};
+kname.oninput=()=>{kpis[cur].name=kname.value;drawTabs();render();};
+kunit.oninput=()=>{kpis[cur].unit=kunit.value;render();};
+kbetter.onchange=()=>{kpis[cur].better=kbetter.value;render();};
+raw.oninput=()=>{kpis[cur].raw=raw.value;render();};
+addk.onclick=()=>{kpis.push({name:'Nuevo KPI',unit:'',better:'low',raw:''});cur=kpis.length-1;drawTabs();load();};
+delk.onclick=()=>{if(kpis.length<2){kpis[0]={name:'KPI 1',unit:'',better:'low',raw:''};}else{kpis.splice(cur,1);cur=Math.max(0,cur-1);}drawTabs();load();};
+/* ---------- matriz de decisión ---------- */
+let dk=[],dn=[];
+const an=k=>{const ser=parse(k.raw);if(!ser.length)return null;const ss=ser.map(s=>stats(s.data));ss.forEach(t=>t.nout=t.out.length);return{ser,ss};};
+function matrix(){
+  const ks=kpis.map(k=>({k,a:an(k)})).filter(o=>o.a);
+  const nS=Math.max(0,...ks.map(o=>o.a.ser.length));
+  const names=Array.from({length:nS},(_,j)=>ks.find(o=>o.a.ser[j]).a.ser[j].name);
+  return{ks,names};
+}
+const wOf=(k,i,n)=>{if(k.w!=null)return k.w;const b=Math.floor(100/n);return i===0?100-b*(n-1):b;};
+function auto(k,a,j){const m=a.ss.map(t=>t.mean),mn=Math.min(...m),mx=Math.max(...m);if(mx===mn)return 10;
+  const f=k.better==='low'?(mx-m[j])/(mx-mn):(m[j]-mn)/(mx-mn);return +(1+9*f).toFixed(1);}
+const scOf=(k,a,j)=>k.sc?.[j]??auto(k,a,j);
+function totals(){return dn.map((_,j)=>{let sw=0,sc=0;dk.forEach((o,i)=>{if(!o.a.ser[j])return;const w=wOf(o.k,i,dk.length);sw+=w;sc+=w*scOf(o.k,o.a,j);});return sw?sc/sw:0;});}
+function renderDec(){
+  const el=document.getElementById('dec'),m=matrix();dk=m.ks;dn=m.names;
+  if(!dk.length){el.innerHTML='';return;}
+  const rows=dk.map((o,i)=>`<tr><td>${esc(o.k.name)}${o.k.unit?` (${esc(o.k.unit)})`:''}<br><span class="cap">${o.k.better==='low'?'menor':'mayor'} es mejor</span></td>
+<td><input class="num" type="number" min="0" max="100" data-w="${i}" value="${wOf(o.k,i,dk.length)}" aria-label="Peso ${esc(o.k.name)}"></td>
+${dn.map((_,j)=>o.a.ser[j]?`<td><input class="num" type="number" min="1" max="10" step="0.1" data-i="${i}" data-j="${j}" value="${scOf(o.k,o.a,j)}" aria-label="Calificación ${esc(dn[j])}"></td>`:'<td>—</td>').join('')}</tr>`).join('');
+  el.innerHTML=`<div class="card"><h2>Matriz de decisión ponderada</h2>
+<p class="cap" style="margin:0 0 8px">Asigna un peso (%) a cada KPI. Las calificaciones (1 = peor, 10 = mejor) se sugieren según la media de cada sistema; puedes editarlas.</p>
+<div class="tw"><table><tr><th>KPI</th><th>Peso (%)</th>${dn.map(n=>`<th>Calif. ${esc(n)}</th>`).join('')}</tr>${rows}
+<tr><td><b>Suma de pesos</b></td><td id="wsum"></td><td colspan="${dn.length}"></td></tr>
+<tr><td><b>Puntaje ponderado total</b></td><td></td>${dn.map((_,j)=>`<td data-t="${j}"></td>`).join('')}</tr></table></div>
+<p style="margin:10px 0 6px"><b>Sistema recomendado:</b> <span id="rec"></span></p>
+<div class="row" style="margin:10px 0 0"><button class="b" id="bpdf">Descargar PDF</button><button class="b" id="bxls">Descargar Excel</button></div>
+<div class="cap" id="msg" role="status"></div></div>`;
+  upd();
+}
+function upd(){
+  const t=totals(),sum=dk.reduce((s,o,i)=>s+wOf(o.k,i,dk.length),0),ws=document.getElementById('wsum');
+  ws.textContent=sum+' %'+(sum===100?'':' (deben sumar 100)');ws.style.background=sum===100?'':'var(--warn)';
+  document.querySelectorAll('[data-t]').forEach(c=>c.innerHTML=`<b>${fx(t[+c.dataset.t])}</b>`);
+  const b=t.indexOf(Math.max(...t));document.getElementById('rec').textContent=t.length?`${dn[b]} (${fx(t[b])} de 10)`:'—';
+}
+document.getElementById('dec').addEventListener('input',e=>{
+  const t=e.target,v=parseFloat(t.value),ok=Number.isFinite(v);
+  if(t.dataset.w!=null)dk[+t.dataset.w].k.w=ok?Math.max(0,v):undefined;
+  else if(t.dataset.i!=null){const k=dk[+t.dataset.i].k;k.sc=k.sc||[];if(ok)k.sc[+t.dataset.j]=Math.min(10,Math.max(1,v));else delete k.sc[+t.dataset.j];}
+  upd();
+});
+document.getElementById('dec').addEventListener('click',e=>{if(e.target.id==='bpdf')exportPdf();if(e.target.id==='bxls')exportXls();});
+
+/* ---------- exportar ---------- */
+const say=t=>{const m=document.getElementById('msg');if(m)m.textContent=t;};
+async function dl(filename,data){
+  const D=await (window.claude?.use?window.claude.use('downloads'):null);
+  if(!D){say('La descarga no está disponible en esta vista.');return;}
+  try{await D.save({filename,data});say('Archivo listo.');}
+  catch(e){say(e&&e.code==='declined'?'Descarga cancelada.':'No se pudo descargar ('+((e&&e.code)||'error')+').');}
+}
+const recTxt=()=>{const t=totals();return t.length?dn[t.indexOf(Math.max(...t))]:'';};
+function exportXls(){
+  if(!window.XLSX){say('No se pudo cargar la librería de Excel.');return;}
+  const wb=XLSX.utils.book_new(),E=XLSX.utils,sn=[];
+  dk.forEach((o,i)=>{
+    const name=`D${i+1}_${o.k.name.replace(/[\\\/?*\[\]:]/g,'')}`.slice(0,31);sn.push(name);
+    const N=Math.max(...o.a.ser.map(s=>s.data.length));
+    const aoa=[['Obs',...o.a.ser.map(s=>s.name)],...Array.from({length:N},(_,r)=>[r+1,...o.a.ser.map(s=>s.data[r]??null)])];
+    E.book_append_sheet(wb,E.aoa_to_sheet(aoa),name);
+  });
+  const ws={},F=[['Media',R=>`AVERAGE(${R})`],['Mediana',R=>`MEDIAN(${R})`],['Moda',R=>`IFERROR(MODE(${R}),"—")`],['Desviación estándar (muestral)',R=>`STDEV(${R})`],['Varianza (muestral)',R=>`VAR(${R})`],['Mínimo',R=>`MIN(${R})`],['Máximo',R=>`MAX(${R})`],['Rango (Máx - Mín)',R=>`MAX(${R})-MIN(${R})`],['Percentil 25 (Q1)',R=>`PERCENTILE(${R},0.25)`],['Percentil 75 (Q3)',R=>`PERCENTILE(${R},0.75)`],['Coeficiente de variación (%)',R=>`STDEV(${R})/AVERAGE(${R})*100`]];
+  let r=0,mc=0;const put=(r,c,cell)=>{ws[E.encode_cell({r,c})]=cell;mc=Math.max(mc,c);};
+  dk.forEach((o,i)=>{
+    put(r++,0,{t:'s',v:`${o.k.name}${o.k.unit?' ('+o.k.unit+')':''}`});
+    put(r,0,{t:'s',v:'Estadístico'});o.a.ser.forEach((s,j)=>put(r,j+1,{t:'s',v:s.name}));r++;
+    F.forEach(([lab,f])=>{put(r,0,{t:'s',v:lab});o.a.ser.forEach((s,j)=>{const c=E.encode_col(j+1);put(r,j+1,{t:'n',f:f(`'${sn[i]}'!${c}2:${c}${s.data.length+1}`)});});r++;});
+    r++;
+  });
+  ws['!ref']=E.encode_range({s:{r:0,c:0},e:{r:r,c:mc}});ws['!cols']=[{wch:32},{wch:16},{wch:16},{wch:16}];
+  E.book_append_sheet(wb,ws,'Estadisticos');
+  const n=dk.length,t=totals(),pad=()=>Array(dn.length+2).fill('');
+  const aoa=[['KPI','Peso (%)',...dn.map(x=>'Calificación '+x)],
+    ...dk.map((o,i)=>[o.k.name,wOf(o.k,i,n),...dn.map((_,j)=>o.a.ser[j]?+scOf(o.k,o.a,j):'')]),
+    ['Suma de pesos (debe ser 100)',...pad().slice(1)],['Puntaje ponderado total',...pad().slice(1)],['Sistema recomendado:',recTxt()]];
+  const wd=E.aoa_to_sheet(aoa);
+  wd['B'+(n+2)]={t:'n',f:`SUM(B2:B${n+1})`};
+  dn.forEach((_,j)=>{const c=E.encode_col(j+2);wd[c+(n+3)]={t:'n',f:`SUMPRODUCT($B$2:$B$${n+1},${c}2:${c}${n+1})/SUM($B$2:$B$${n+1})`};});
+  wd['!cols']=[{wch:32},{wch:10},...dn.map(()=>({wch:18}))];
+  E.book_append_sheet(wb,wd,'Decision');
+  dl('analisis_kpis.xlsx',XLSX.write(wb,{bookType:'xlsx',type:'array'}));
+}
+const LT={'--s0':'#1f77b4','--s1':'#e08a1e','--s2':'#2e9e5b','--s3':'#b23a7f','--s4':'#6b5bd2','--s5':'#8a6d3b','--ink':'#16202b','--mute':'#5d6b7a','--line':'#d8dee5','--card':'#ffffff'};
+function png(svg){return new Promise((res,rej)=>{
+  const s=svg.replace(/var\((--[\w-]+)\)/g,(_,v)=>LT[v]||'#000').replace('<svg ',`<svg xmlns="http://www.w3.org/2000/svg" width="${W*2}" height="${H*2}" `)
+    .replace(/(<svg[^>]*>)/,'$1<style>text{fill:#5d6b7a;font:11px Arial,sans-serif}.ax{stroke:#d8dee5}</style>');
+  const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=W*2;c.height=H*2;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0);res(c.toDataURL('image/png'));};
+  im.onerror=rej;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);});}
+async function exportPdf(){
+  if(!window.jspdf){say('No se pudo cargar la librería de PDF.');return;}
+  say('Generando PDF…');
+  try{
+    const d=new window.jspdf.jsPDF({unit:'pt',format:'letter'}),X=40,CW=532,H1=(t,y,sz=11)=>{d.setFont('helvetica','bold');d.setFontSize(sz);d.text(t,X,y);d.setFont('helvetica','normal');};
+    H1('Informe estadístico de KPIs',48,16);d.setFontSize(9);d.text(new Date().toLocaleDateString('es'),X,62);
+    const img=async(svg,y,w,title)=>{H1(title,y,10);d.addImage(await png(svg),'PNG',X,y+6,w,w*H/W);};
+    let first=true;
+    for(const {k,a} of dk){
+      const u=k.unit?` (${k.unit})`:'';let y=first?90:50;if(!first)d.addPage();first=false;
+      H1(`${k.name}${u} - ${k.better==='low'?'menor es mejor':'mayor es mejor'}`,y,12);y+=16;
+      const lw=170,cw=(CW-lw)/a.ser.length;d.setFontSize(8.5);d.setDrawColor(200);
+      H1('Estadístico',y,8.5);a.ser.forEach((s,j)=>d.text(String(s.name),X+lw+cw*(j+1)-4,y,{align:'right'}));y+=5;
+      ROWS.forEach(r=>{y+=12;d.line(X,y-9,X+CW,y-9);d.setFontSize(8.5);d.text(r[0],X,y);a.ss.forEach((t,j)=>d.text(r[1]==='nout'?String(t.nout):fx(t[r[1]]),X+lw+cw*(j+1)-4,y,{align:'right'}));});
+      y+=16;
+      await img(barChart(a.ser,a.ss,k),y,400,`Media de ${k.name}${u} por sistema`);y+=6+400*H/W+18;
+      await img(lineChart(a.ser,a.ss,k),y,400,`Dispersión de ${k.name}${u} por observación`);
+      d.addPage();
+      await img(boxChart(a.ser,a.ss,k),50,470,`Distribución de ${k.name}${u} - caja y bigote`);
+    }
+    d.addPage();H1('Matriz de decisión ponderada',50,14);
+    const cw=[200,60,...dn.map(()=>Math.min(90,(CW-260)/dn.length))],jw=0;let y=72;d.setFontSize(8);
+    const cell=(txts,bold)=>{const L=txts.map((t,c)=>d.splitTextToSize(String(t),(c<cw.length?cw[c]:jw)-6));const h=Math.max(...L.map(l=>l.length))*10+6;
+      d.setFont('helvetica',bold?'bold':'normal');let x=X;L.forEach((l,c)=>{d.text(l,x+2,y+9);x+=c<cw.length?cw[c]:jw;});d.line(X,y+h,X+CW,y+h);y+=h;};
+    cell(['KPI','Peso',...dn.map(n=>'Calif. '+n)],true);
+    dk.forEach((o,i)=>cell([o.k.name,wOf(o.k,i,dk.length)+'%',...dn.map((_,j)=>o.a.ser[j]?scOf(o.k,o.a,j):'-')],false));
+    const t=totals();cell(['Puntaje ponderado','',...t.map(v=>fx(v))],true);
+    y+=20;H1('Sistema recomendado: '+recTxt(),y,11);
+    await dl('informe_kpis.pdf',d.output('blob'));
+  }catch(e){say('No se pudo generar el PDF.');}
+}
+
+
+/* ---------- motor de contrastes: distribuciones y decisión ---------- */
+const HM=(()=>{
+const G=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+function lgamma(z){
+  if(z<0.5)return Math.log(Math.PI/Math.abs(Math.sin(Math.PI*z)))-lgamma(1-z);
+  z-=1;let x=G[0];const t=z+7.5;
+  for(let i=1;i<9;i++)x+=G[i]/(z+i);
+  return 0.5*Math.log(2*Math.PI)+(z+0.5)*Math.log(t)-t+Math.log(x);
+}
+/* gamma incompleta regularizada: devuelve [P,Q] */
+function gammaPQ(a,x){
+  if(x<=0)return[0,1];
+  const pre=Math.exp(-x+a*Math.log(x)-lgamma(a));
+  if(x<a+1){
+    let ap=a,s=1/a,del=s;
+    for(let n=0;n<1000;n++){ap++;del*=x/ap;s+=del;if(Math.abs(del)<Math.abs(s)*1e-16)break;}
+    const P=Math.min(1,s*pre);return[P,1-P];
+  }
+  let b=x+1-a,c=1e300,d=1/b,h=d;
+  for(let i=1;i<1000;i++){
+    const an=-i*(i-a);b+=2;d=an*d+b;if(Math.abs(d)<1e-300)d=1e-300;
+    c=b+an/c;if(Math.abs(c)<1e-300)c=1e-300;d=1/d;const del=d*c;h*=del;
+    if(Math.abs(del-1)<1e-16)break;
+  }
+  const Q=Math.min(1,pre*h);return[1-Q,Q];
+}
+function betacf(a,b,x){
+  const FP=1e-300;let qab=a+b,qap=a+1,qam=a-1,c=1,d=1-qab*x/qap;
+  if(Math.abs(d)<FP)d=FP;d=1/d;let h=d;
+  for(let m=1;m<=1000;m++){
+    const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+    d=1+aa*d;if(Math.abs(d)<FP)d=FP;c=1+aa/c;if(Math.abs(c)<FP)c=FP;d=1/d;h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+    d=1+aa*d;if(Math.abs(d)<FP)d=FP;c=1+aa/c;if(Math.abs(c)<FP)c=FP;d=1/d;
+    const del=d*c;h*=del;if(Math.abs(del-1)<3e-16)break;
+  }
+  return h;
+}
+function ibeta(x,a,b){
+  if(x<=0)return 0;if(x>=1)return 1;
+  const bt=Math.exp(lgamma(a+b)-lgamma(a)-lgamma(b)+a*Math.log(x)+b*Math.log(1-x));
+  return x<(a+1)/(a+b+2)?bt*betacf(a,b,x)/a:1-bt*betacf(b,a,1-x)/b;
+}
+/* normal */
+const normSf=z=>{const q=0.5*gammaPQ(0.5,z*z/2)[1];return z>=0?q:1-q;};
+const normCdf=z=>normSf(-z);
+const normPdf=x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI);
+/* t de Student */
+function tSf(t,v){const h=0.5*ibeta(v/(v+t*t),v/2,0.5);return t>=0?h:1-h;}
+const tCdf=(t,v)=>tSf(-t,v);
+const tPdf=(x,v)=>Math.exp(lgamma((v+1)/2)-lgamma(v/2))/Math.sqrt(v*Math.PI)*Math.pow(1+x*x/v,-(v+1)/2);
+/* chi-cuadrada */
+const chiCdf=(x,k)=>gammaPQ(k/2,x/2)[0];
+const chiSf=(x,k)=>gammaPQ(k/2,x/2)[1];
+const chiPdf=(x,k)=>x<=0?(k<2?Infinity:k===2?0.5:0):Math.exp((k/2-1)*Math.log(x)-x/2-(k/2)*Math.log(2)-lgamma(k/2));
+/* F */
+const fCdf=(x,a,b)=>x<=0?0:ibeta(a*x/(a*x+b),a/2,b/2);
+const fSf=(x,a,b)=>x<=0?1:ibeta(b/(a*x+b),b/2,a/2);
+const fPdf=(x,a,b)=>x<=0?(a<2?Infinity:a===2?1:0):Math.exp(0.5*(a*Math.log(a*x)+b*Math.log(b)-(a+b)*Math.log(a*x+b))-Math.log(x)-(lgamma(a/2)+lgamma(b/2)-lgamma((a+b)/2)));
+/* cuantiles por bisección */
+function bisect(cdf,p,lo,hi){
+  while(cdf(hi)<p){lo=hi;hi*=2;if(hi>1e12)break;}
+  for(let i=0;i<200;i++){const m=(lo+hi)/2;if(cdf(m)<p)lo=m;else hi=m;if(hi-lo<1e-13*Math.max(1,Math.abs(m)))break;}
+  return (lo+hi)/2;
+}
+function qSym(cdf,p){ // distribución simétrica alrededor de 0
+  if(p===0.5)return 0;
+  if(p>0.5)return bisect(cdf,p,0,8);
+  return -bisect(cdf,1-p,0,8);
+}
+function mk(type,a,b){
+  switch(type){
+    case 'z':return{type,a,sym:true,s:'z',name:'Normal estándar',cdf:normCdf,sf:normSf,pdf:normPdf,q:p=>qSym(normCdf,p)};
+    case 't':return{type,a,sym:true,s:'t',name:`t de Student (${gl(a)} gl)`,cdf:x=>tCdf(x,a),sf:x=>tSf(x,a),pdf:x=>tPdf(x,a),q:p=>qSym(x=>tCdf(x,a),p)};
+    case 'chi':return{type,a,sym:false,s:'χ²',name:`Chi-cuadrada (${gl(a)} gl)`,cdf:x=>chiCdf(x,a),sf:x=>chiSf(x,a),pdf:x=>chiPdf(x,a),q:p=>bisect(x=>chiCdf(x,a),p,0,Math.max(1,a))};
+    case 'f':return{type,a,b,sym:false,s:'F',name:`F (${gl(a)}, ${gl(b)} gl)`,cdf:x=>fCdf(x,a,b),sf:x=>fSf(x,a,b),pdf:x=>fPdf(x,a,b),q:p=>bisect(x=>fCdf(x,a,b),p,0,2)};
+  }
+}
+const gl=x=>Number.isInteger(x)?String(x):x.toFixed(2);
+/* decisión: valor p, críticos y rechazo. tail: 'two' | 'right' | 'left' */
+function decide(d,stat,tail,alpha){
+  let p,lo=null,hi=null;
+  if(d.sym){
+    if(tail==='two'){p=Math.min(1,2*d.sf(Math.abs(stat)));const c=d.q(1-alpha/2);lo=-c;hi=c;}
+    else if(tail==='right'){p=d.sf(stat);hi=d.q(1-alpha);}
+    else{p=d.sf(-stat);lo=d.q(alpha);}
+  }else{
+    if(tail==='two'){p=Math.min(1,2*Math.min(d.cdf(stat),d.sf(stat)));lo=d.q(alpha/2);hi=d.q(1-alpha/2);}
+    else if(tail==='right'){p=d.sf(stat);hi=d.q(1-alpha);}
+    else{p=d.cdf(stat);lo=d.q(alpha);}
+  }
+  const inReg=(lo!==null&&stat<lo)||(hi!==null&&stat>hi);
+  return{p,lo,hi,reject:p<alpha,inReg};
+}
+return{lgamma,normCdf,normSf,tCdf,tSf,chiCdf,chiSf,fCdf,fSf,mk,decide,pdf:{normPdf,tPdf,chiPdf,fPdf}};
+})();
+
+/* ---------- contraste de hipótesis ---------- */
+(function(){
+const $=id=>document.getElementById(id);
+const g=x=>Number.isFinite(x)?Number(x.toPrecision(7)).toLocaleString('es-MX',{maximumFractionDigits:8}):'—';
+const pcn=x=>(x*100).toLocaleString('es-MX',{maximumFractionDigits:2})+' %';
+const pS=(p,a)=>p<0.0001?'< 0.0001':'= '+pf(p,a);
+const pf=(p,a)=>p<0.0001?'< 0.0001':(a!==undefined&&Math.abs(p-a)<0.0005?p.toFixed(6):p.toFixed(4));
+const XB='x̄',PH='p̂';
+const REL={two:'diferente de',right:'mayor que',left:'menor que'};
+const OPS={'<=':'≤','<':'<','>=':'≥','>':'>'};
+const H0W={two:'es igual a',right:'es menor o igual a',left:'es mayor o igual a'};
+const TAILN={two:'bilateral',right:'de cola derecha',left:'de cola izquierda'};
+const TYPES=[
+  {id:'m1',name:'Una media'},{id:'m2',name:'Dos medias'},
+  {id:'p1',name:'Una proporción'},{id:'p2',name:'Dos proporciones'},
+  {id:'v1',name:'Una varianza'},{id:'v2',name:'Dos varianzas'}];
+const PRESETS=[
+ {id:'p1',just:'Al tener una muestra igual a 30, desconocer σ y en su lugar utilizar s, se basará en t de Student con grados de libertad (gl = n − 1).',label:'Problema 1 · Una media · Latencia (Proveedor A)',type:'m1',k1:'Latencia',sys1:'Proveedor A',val:'35',tail:'right',alpha:'0.01',
+  q:'El proveedor A ofrece en su contrato una latencia promedio de 35 ms. El equipo de TI sospecha que en la operación real el promedio es mayor. ¿El tiempo promedio de latencia del Proveedor A es mayor que 35 ms?'},
+ {id:'p2',just:'Se basa en t de Welch, ya que las varianzas son desiguales, con grados de libertad:',jf:'gl = (s₁²/n₁ + s₂²/n₂)² / [ (s₁²/n₁)²/(n₁ − 1) + (s₂²/n₂)²/(n₂ − 1) ]',label:'Problema 2 · Dos medias · Velocidad de descarga (A vs C)',type:'m2',k1:'Velocidad de descarga',sys1:'Proveedor A',sys2:'Proveedor C',tail:'two',alpha:'0.01',
+  q:'¿La velocidad de descarga promedio del Proveedor A es diferente de la del Proveedor C?'},
+ {id:'p3',just:'Al ser una prueba de Proporción, se basará en la distribución normal estándar (Z).',label:'Problema 3 · Una proporción · Velocidad de descarga ≥ 90 (Proveedor B)',type:'p1',k1:'Velocidad de descarga',sys1:'Proveedor B',val:'0.5',op:'>=',cut:'90',tail:'left',alpha:'0.01',
+  q:'El Proveedor B afirma que en al menos 50% de los días entrega una velocidad de descarga ≥ 90 Mbps. ¿La proporción de días en que B alcanza ese nivel es menor que 0.50?'},
+ {id:'p4',just:'Al ser una prueba de Dos Proporciones, se basará en la distribución normal estándar (Z).',label:'Problema 4 · Dos proporciones · Velocidad ≥ 90 (A vs B)',type:'p2',k1:'Velocidad de descarga',sys1:'Proveedor A',sys2:'Proveedor B',op:'>=',cut:'90',tail:'right',alpha:'0.05',
+  q:'¿La proporción de días en que el Proveedor A alcanza velocidades ≥ 90 Mbps es mayor que la del Proveedor B?'},
+ {id:'p5',just:'Al contar únicamente con una varianza poblacional y una varianza muestral, utilizaremos la tabla de distribución de Xi cuadrada, junto a la fórmula de Xi calculada.',label:'Problema 5 · Una varianza · Latencia (Proveedor A)',type:'v1',k1:'Latencia',sys1:'Proveedor A',val:'25',tail:'right',alpha:'0.05',
+  q:'Para considerar estable a un proveedor, el área de TI exige que la variabilidad de la latencia no supere σ² = 25 ms² (σ = 5 ms; valor hipotético). ¿La varianza de la latencia del Proveedor A es mayor que 25 ms²?'},
+ {id:'p6',just:'Al contar únicamente con dos varianzas muestrales, utilizaremos la tabla de distribución F de Fisher - Snedecor junto con su fórmula correspondiente para F de Fisher calculada.',label:'Problema 6 · Dos varianzas · Velocidad de descarga (B vs C)',type:'v2',k1:'Velocidad de descarga',sys1:'Proveedor B',sys2:'Proveedor C',tail:'right',alpha:'0.01',
+  q:'El área de TI de la empresa quiere saber cuál proveedor (B y C) posee una velocidad de descarga más homogénea. ¿La velocidad de descarga del Proveedor B es más variable que la del Proveedor C?'}];
+const DOC={
+p1:{pa:["El parámetro de interés es el promedio (μ)."],dd:"El estadístico de prueba (tcal =2.769) se encuentra dentro de la zona de rechazo, por lo tanto se rechaza H₀.",dt:[["n", "30 días"], ["x̄", "37.58 ms"], ["s", "5.104 ms"], ["α", "0.01"]],h0:'μ ≤ 35 ms',h1:'μ > 35 ms',cs:'Con un nivel de significancia de 0.01, hay evidencia estadística suficiente para afirmar que la latencia promedio del Proveedor A supera los 35 ms.',cp:'La latencia real del proveedor A (≈ 37.58 ms) excede el valor de referencia; si el contrato exige 35 ms, proveedor A no lo cumple. Es un argumento en contra de A frente a un proveedor con menor latencia.',e1:'La latencia promedio de A esta fallado con latencias mayores a 35 ms cuando en realidad su servicio si cumple con el promedio contratado. Con un nivel de significancia de 0.01, esto ocurrirá en 1% de los casos.',e2:'No detectar que A excede los 35 ms y seguir creyendo que cumple el contrato. El equipo de TI quedaría conforme con un servicio deficiente.'},
+p2:{pa:["El parámetro de interés son dos medias (μ₁ − μ₂ )"],dd:"El estadístico de prueba (tcal =-0.855) se encuentra dentro de la zona de aceptación, por lo tanto se acepta H₀ y se rechaza H₁.",dt:[["Tamaño de la muestra", "n₁ = 30 días (Proveedor A) · n₂ = 30 días (Proveedor C)"], ["Media muestral", "x̄₁ = 91.563 Mbps · x̄₂ = 93.273 Mbps"], ["Desviación estándar muestral", "s₁ = 3.478 Mbps · s₂ = 10.393 Mbps"], ["Nivel de significancia", "α = 0.01"]],h0:'μ₁ = μ₂',h1:'μ₁ ≠ μ₂',cs:'Con un nivel de significancia de 0.10, no hay evidencia suficiente de que las velocidades promedio de proveedor A y proveedor C sean diferentes.',cp:'Con un nivel de significancia de 0.01, el Proveedor A y el proveedor C no muestran una diferencia significativa en su velocidad promedio diaria debido a la alta variabilidad del Proveedor C. Sin embargo, el comportamiento típico del Proveedor C (x̄₂ = 93.273 Mbps) es superior al de A (x̄₁ = 91.563 Mbps), por lo que se recomienda revisar ese incidente del proveedor  C, no darlo por equivalente.',e1:'Declarar que proveedor A y proveedor C tienen velocidades distintas cuando en realidad son iguales; con α = 0.10 el riesgo es de 10 %.',e2:'No detectar una diferencia real entre el proveedor A y proveedor C porque el valor atípico del proveedor C aumenta el error estándar.'},
+p3:{pa:["El parámetro de Interés, al analizar una proporción, es P."],dd:"Se acepta la Hipótesis Nula (H₀).",dt:[["n", "30 días"], ["P = Proporción de éxito poblacional", "50%"], ["P̂ = Proporción muestral", "<span class=\"fr\"><span>11 días con velocidad ≥ 90</span><span>30 días totales</span></span> = 0.3667"], ["Q = Proporción de fracaso", "50%"]],h0:'p ≥ 50%',h1:'p < 50%',cs:'Con un nivel de significancia del 1%, el estadístico de prueba Zcal = -1.4602 no se encuentra en la región de rechazo de la cola izquierda. Por lo tanto, no existe evidencia significativa para afirmar que la proporción de días con velocidad ≥ 90 Mbps sea menor al 50%.',cp:'Al no existir suficiente evidencia, no nos es posible negar lo que el proveedor B menciona. Aunque en la muestra de 30 días solo 11 días cumplió con lo que prometía, el tamaño de la muestra es muy pequeño para asegurar con certeza que el proveedor no es honesto.',e1:'Concluir que la proporción de días viables del Proveedor B es menor al 50%, cuando en realidad el proveedor sí cumple con el 50% o más a largo plazo.',e2:'Concluir que el Proveedor B sí cumple, cuando en realidad el proveedor está entregando un servicio deficiente.'},
+p4:{pa:["El parámetro de Interés, al analizar dos proporción, es PA y PB."],dd:"Se rechaza la Hipótesis Nula (H₀). El proveedor A alcanza esas velocidades en más días, a comparación del B.",dt:[["n", "30 días"], ["XA", "18 días"], ["XB", "11 días"], ["P̄ = Proporción ponderada combinada", "<span class=\"fr\"><span>XA + XB</span><span>nA + nB</span></span> = <span class=\"fr\"><span>18 + 11</span><span>30 + 30</span></span> = 0.4833"], ["P1 = Proporción de la muestra 1", "<span class=\"fr\"><span>xA</span><span>nA</span></span> = <span class=\"fr\"><span>18</span><span>30</span></span> = 0.6"], ["P2 = Proporción de la muestra 2", "<span class=\"fr\"><span>xB</span><span>nB</span></span> = <span class=\"fr\"><span>11</span><span>30</span></span> = 0.3667"], ["Q = Proporción de fracaso", "Contrasta a P = 0.5167"]],h0:'PA ≤ PB',h1:'PA > PB',cs:'Con un nivel de significancia del 5%, el estadístico de prueba Zcal = 1.8081 se encuentra en la región de rechazo de la cola derecha. Por lo tanto, sí existe evidencia significativa para afirmar que la proporción de días en que el Proveedor A alcanza velocidades ≥ 90 Mbps es mayor que la del Proveedor B.',cp:'El Proveedor A garantiza una mayor consistencia y confiabilidad en la entrega de velocidades óptimas (90Mbps) en comparación con el Proveedor B, logrando la meta en un 60% de los días frente a sólo un 36.67% del Proveedor B.',e1:'Concluir que la proporción de días donde su velocidad es ≥ 90 Mbps del Proveedor A es mayor que el Proveedor B, cuando en realidad no lo es. Esto podría llevar a rechazar un Proveedor que cuenta con un rendimiento más optimizado.',e2:'Concluir que el Proveedor A no es mayor que el proveedor B, cuando en realidad sí lo es. Esto podría llevar a que la empresa pierda la oportunidad de optimizar con ayuda del proveedor A.'},
+p5:{pa:["Varianza poblacional de la latencia (ms²) del Proveedor A."],dd:"Se acepta la hipótesis nula y se rechaza la hipótesis alterna.",dt:[["Días (n)", "30"], ["Desviación típica muestral (s)", "5.104 ms aproximadamente"], ["Desviación típica máxima (σ)", "5 ms"], ["Varianza muestral (S²)", "26.05 ms²"], ["Varianza poblacional (σ²)", "25 ms²"], ["α", "0.05"]],h0:'σ² ≤ 25 ms²',h1:'σ² > 25 ms²',cs:'Con un nivel de significancia del 0.05. No hay evidencia significativa que la variabilidad de la latencia del proveedor A sea mayor a 25 ms². (a pesar de que la varianza muestral es de 26.05, es aún aceptable)',cp:'El proveedor A puede considerarse estable en latencia dentro del límite fijado. Esto no demuestra que σ² sea 25; solo que los datos no contradicen el límite. Con más días de monitoreo se afinará la conclusión.',e1:'Concluir que A es demasiado variable cuando en realidad su varianza es ≤ 25 ms², descartando por error a un proveedor estable.',e2:'No detectar que A realmente supera el límite de variabilidad y contratarlo creyendo que es estable.'},
+p6:{pa:["Varianza Poblacional de B  σ₁²", "Varianza Poblacional de C  σ₂²"],dd:"Se acepta la hipótesis nula y se rechaza la hipótesis alterna.",dt:[["Días (n)", "30"], ["Desviación estándar muestral (Proveedor B)", "15.5769 Mbps aproximadamente"], ["Desviación estándar muestral (Proveedor C)", "10.3925 Mbps aproximadamente"], ["Varianza muestral (Proveedor B)", "242.639 Mbps²"], ["Varianza muestral (Proveedor C)", "108.004 Mbps²"], ["α", "0.01"]],h0:'σ₁² ≤ σ₂²',h1:'σ₁² > σ₂²',cs:'Con un nivel de significancia del 0.01, no hay evidencia significativa que el proveedor B sea más variable que el proveedor C. Debido a que el valor crítico no llega a cubrir el estadístico de prueba.',cp:'Con un nivel de significancia del 0.01, el proveedor B es menos o igual de variable en cuanto a velocidad de descarga que el proveedor C, sin embargo debemos de tomar en cuenta que el nivel de error es insignificante, por lo que se recomienda aumentar el número de días para su mejor monitoreo.',e1:'Afirmar que B es más variable que C cuando en realidad B es menor o igual de variable que el proveedor C.',e2:'Afirmar que B es menor o igual de variable que el proveedor C, cuando en realidad B es más variable que C.'}};
+function findSrc(k,sy){return srcs().find(o=>o.kpi.toLowerCase()===k.toLowerCase()&&o.sys.toLowerCase()===sy.toLowerCase());}
+function applyPreset(p){
+  const a=findSrc(p.k1,p.sys1),b=p.sys2?findSrc(p.k1,p.sys2):null;
+  if(!a||(p.sys2&&!b))return false;
+  Object.assign(hy,{type:p.type,s1:a.key,s2:b?b.key:hy.s2,n1:'',n2:'',val:p.val||'',tail:p.tail,alpha:p.alpha,op:p.op||hy.op,cut:p.cut||'',sigmaKnown:false,varEq:false,q:p.q,qDirty:true,preset:p.id});
+  return true;
+}
+const hy={type:'m1',s1:'',s2:'',n1:'',n2:'',val:'',tail:'two',alpha:'0.05',sigmaKnown:false,sigma:'',varEq:false,op:'<=',cut:'',q:'',qDirty:false,preset:'',presetMsg:''};
+let saved=[],last=null,confirmDel=false;
+try{saved=JSON.parse(localStorage.getItem('kpiHyp1')||'[]');if(!Array.isArray(saved))saved=[];}catch(e){saved=[];}
+const persist=()=>{try{localStorage.setItem('kpiHyp1',JSON.stringify(saved));}catch(e){}};
+const ud=S=>S.unit?' '+S.unit:'';
+const up=S=>S.unit?` (${S.unit})`:'';
+const isTwo=()=>/2$/.test(hy.type);
+
+/* ---------- datos disponibles ---------- */
+function srcs(){
+  const o=[];
+  kpis.forEach((k,ki)=>parse(k.raw).forEach((s,j)=>o.push({key:ki+'|'+j,ki,j,kpi:k.name||('KPI '+(ki+1)),unit:k.unit||'',better:k.better,sys:s.name,data:s.data})));
+  return o;
+}
+function pick(key,nStr){
+  const s=srcs().find(o=>o.key===key);if(!s)return null;
+  const N=s.data.length;let n=parseInt(nStr,10);if(!(n>=1))n=N;n=Math.min(n,N);
+  return Object.assign({},s,{N,n,data:s.data.slice(0,n)});
+}
+const okFn=()=>{const c=parseFloat(hy.cut),o=hy.op;return v=>o==='<='?v<=c:o==='<'?v<c:o==='>='?v>=c:v>c;};
+const critTxt=S=>`${S.kpi} ${OPS[hy.op]} ${hy.cut===''||!isFinite(parseFloat(hy.cut))?'…':g(parseFloat(hy.cut))}${ud(S)}`;
+
+/* ---------- pregunta automática ---------- */
+function autoQ(S1,S2){
+  if(!S1)return '';
+  const t=hy.tail,v0=parseFloat(hy.val),v=isFinite(v0)?g(v0):'…',rel=REL[t];
+  const A=`${S1.kpi} en ${S1.sys}`,B=S2?`${S2.kpi} en ${S2.sys}`:'';
+  const cmp=t==='two'?'difiere':t==='right'?'es mayor':'es menor';
+  switch(hy.type){
+    case 'm1':return `¿El promedio de ${A} es ${rel} ${v}${ud(S1)}?`;
+    case 'm2':return t==='two'?`¿Existe diferencia entre el promedio de ${A} y el de ${B}?`:`¿El promedio de ${A} es ${t==='right'?'mayor':'menor'} que el de ${B}?`;
+    case 'p1':return `¿La proporción de observaciones de ${S1.kpi} en ${S1.sys} que cumplen «${critTxt(S1)}» es ${rel} ${v}?`;
+    case 'p2':return t==='two'?`¿La proporción de observaciones que cumplen «${critTxt(S1)}» difiere entre ${S1.sys} y ${S2?S2.sys:'…'}?`:`¿La proporción de observaciones que cumplen «${critTxt(S1)}» es ${t==='right'?'mayor':'menor'} en ${S1.sys} que en ${S2?S2.sys:'…'}?`;
+    case 'v1':return `¿La varianza de ${A} es ${rel} ${v}${S1.unit?' '+S1.unit+'²':''}?`;
+    case 'v2':return t==='two'?`¿La variabilidad (varianza) de ${A} es diferente de la de ${B}?`:`¿La variabilidad (varianza) de ${A} es ${t==='right'?'mayor':'menor'} que la de ${B}?`;
+  }
+  return '';
+}
+
+/* ---------- especificación de cada prueba ---------- */
+function buildSpec(S1,S2){
+  const T=hy.type,tail=hy.tail;
+  switch(T){
+  case 'm1':{
+    const x=S1.data,n=x.length;if(n<2)return{err:'Se necesitan al menos 2 observaciones (n ≥ 2).'};
+    const mu0=parseFloat(hy.val);if(!isFinite(mu0))return{err:'Escribe el valor hipotético μ₀ que quieres contrastar.'};
+    const st=stats(x),m=st.mean,s=st.sd,known=hy.sigmaKnown,sg=parseFloat(hy.sigma);
+    if(known&&!(sg>0))return{err:'Escribe la desviación estándar poblacional σ (mayor que 0).'};
+    const sd=known?sg:s;if(!(sd>0))return{err:'Todas las observaciones son iguales (s = 0): no se puede calcular el estadístico.'};
+    const se=sd/Math.sqrt(n),stat=(m-mu0)/se,u=ud(S1),loc=`${S1.kpi} en ${S1.sys}`,sn=known?'z':'t';
+    return{
+      name:known?'Prueba z para una media (σ conocida)':'Prueba t de Student para una media (σ desconocida)',
+      par:{sym:'μ',words:`promedio poblacional de ${S1.kpi}${up(S1)} en ${S1.sys}`},
+      lhs:'μ',rhs:g(mu0),
+      h0w:`el promedio de ${loc} ${H0W[tail]} ${g(mu0)}${u}`,
+      h1w:`el promedio de ${loc} es ${REL[tail]} ${g(mu0)}${u}`,
+      dist:known?HM.mk('z'):HM.mk('t',n-1),stat,
+      just:[
+        `Se compara el promedio de una sola muestra (${loc}) contra un valor de referencia; la variable es cuantitativa.`,
+        known?`Se conoce la desviación estándar poblacional (σ = ${g(sg)}${u}), por eso el estadístico sigue una distribución normal estándar.`
+             :`La desviación estándar de la población no se conoce y se estima con la muestra (s), por eso el estadístico sigue una distribución t de Student con n − 1 = ${n-1} grados de libertad.`,
+        `Supuestos: observaciones independientes y población aproximadamente normal${n>=30?` (n = ${n} ≥ 30, Teorema del Límite Central)`:''}.`],
+      data:[`Tamaño de muestra: n = ${n}${S1.n<S1.N?` (primeras ${n} de ${S1.N} observaciones)`:''}`,`Media muestral: ${XB} = ${fx(m)}${u}`,
+            known?`Desviación estándar poblacional: σ = ${g(sg)}${u}`:`Desviación estándar muestral: s = ${fx(s)}${u}`,`Valor hipotético: μ₀ = ${g(mu0)}${u}`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:`${sn} = (${XB} − μ₀) / (${known?'σ':'s'} / √n)`,
+      subst:[`Error estándar = ${known?'σ':'s'} / √n = ${fx(sd)} / √${n} = ${fx(se,4)}`,`${sn} = (${fx(m)} − ${g(mu0)}) / ${fx(se,4)} = ${fx(stat,4)}`],
+      prac:{
+        reject:`El promedio observado de ${loc} (${fx(m)}${u}) ${m>mu0?'supera':'es inferior a'} el valor de referencia (${g(mu0)}${u}).`,
+        keep:`El promedio observado de ${loc} (${fx(m)}${u}) no difiere significativamente del valor de referencia (${g(mu0)}${u}).`}
+    };
+  }
+  case 'm2':{
+    const a=S1.data,b=S2.data,n1=a.length,n2=b.length;if(n1<2||n2<2)return{err:'Cada muestra necesita al menos 2 observaciones.'};
+    const A=stats(a),B=stats(b),m1=A.mean,m2=B.mean,s1=A.sd,s2=B.sd,v1=s1*s1,v2=s2*s2;
+    if(!(v1>0&&v2>0))return{err:'Una de las muestras no tiene variación (s = 0): no se puede calcular el estadístico.'};
+    const same=S1.ki===S2.ki,L1=same?S1.sys:`${S1.kpi} (${S1.sys})`,L2=same?S2.sys:`${S2.kpi} (${S2.sys})`,ctx=same?` de ${S1.kpi}`:'';
+    const u1=ud(S1),u2=ud(S2);
+    let se,df,sp2;
+    if(hy.varEq){sp2=((n1-1)*v1+(n2-1)*v2)/(n1+n2-2);se=Math.sqrt(sp2*(1/n1+1/n2));df=n1+n2-2;}
+    else{const q1=v1/n1,q2=v2/n2;se=Math.sqrt(q1+q2);df=(q1+q2)**2/(q1*q1/(n1-1)+q2*q2/(n2-1));}
+    const stat=(m1-m2)/se,better=same?kpis[S1.ki].better:null;
+    const bestL=better?((better==='low'?m1<m2:m1>m2)?L1:L2):null;
+    const sub=hy.varEq
+      ?[`Varianza agrupada: sp² = ((n₁−1)s₁² + (n₂−1)s₂²) / (n₁+n₂−2) = (${n1-1}·${fx(v1,4)} + ${n2-1}·${fx(v2,4)}) / ${n1+n2-2} = ${fx(sp2,4)}`,
+        `Error estándar = √(sp²·(1/n₁ + 1/n₂)) = ${fx(se,4)}`,`t = (${fx(m1)} − ${fx(m2)}) / ${fx(se,4)} = ${fx(stat,4)}`]
+      :[`Error estándar = √(s₁²/n₁ + s₂²/n₂) = √(${fx(v1,4)}/${n1} + ${fx(v2,4)}/${n2}) = ${fx(se,4)}`,
+        `Grados de libertad (Welch) = ${fx(df,2)}`,`t = (${fx(m1)} − ${fx(m2)}) / ${fx(se,4)} = ${fx(stat,4)}`];
+    return{
+      name:hy.varEq?'Prueba t para dos medias, muestras independientes (varianza agrupada)':'Prueba t de Welch para dos medias, muestras independientes',
+      par:{sym:'μ₁ − μ₂',words:`diferencia entre los promedios poblacionales${ctx} de ${L1} (μ₁) y ${L2} (μ₂)`},
+      lhs:'μ₁ − μ₂',rhs:'0',
+      h0w:tail==='two'?`los promedios${ctx} de ${L1} y ${L2} son iguales`:`el promedio${ctx} de ${L1} es ${tail==='right'?'menor':'mayor'} o igual que el de ${L2}`,
+      h1w:tail==='two'?`los promedios${ctx} de ${L1} y ${L2} son diferentes`:`el promedio${ctx} de ${L1} es ${tail==='right'?'mayor':'menor'} que el de ${L2}`,
+      dist:HM.mk('t',df),stat,
+      just:[`Se comparan los promedios de dos grupos distintos (${L1} y ${L2}); las muestras son independientes y la variable es cuantitativa.`,
+        hy.varEq?`Se supone que las dos poblaciones tienen la misma varianza (σ₁² = σ₂²), por eso se usa la varianza agrupada con n₁ + n₂ − 2 = ${df} grados de libertad.`
+                :`No se supone que las varianzas sean iguales (prueba de Welch), por lo que los grados de libertad se aproximan: gl = ${fx(df,2)}.`,
+        `Supuestos: observaciones independientes y poblaciones aproximadamente normales (o muestras grandes). n₁ = ${n1}, n₂ = ${n2}.`],
+      data:[`Muestra 1 (${L1}): n₁ = ${n1}, ${XB}₁ = ${fx(m1)}${u1}, s₁ = ${fx(s1)}${u1}`,`Muestra 2 (${L2}): n₂ = ${n2}, ${XB}₂ = ${fx(m2)}${u2}, s₂ = ${fx(s2)}${u2}`,`Diferencia hipotética: μ₁ − μ₂ = 0`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:hy.varEq?`t = (${XB}₁ − ${XB}₂) / √(sp²·(1/n₁ + 1/n₂))`:`t = (${XB}₁ − ${XB}₂) / √(s₁²/n₁ + s₂²/n₂)`,
+      subst:sub,
+      prac:{
+        reject:`${tail==='two'?`Los promedios${ctx} de ${L1} (${fx(m1)}${u1}) y ${L2} (${fx(m2)}${u2}) son significativamente distintos.`:`El promedio${ctx} de ${L1} (${fx(m1)}${u1}) es ${tail==='right'?'mayor':'menor'} que el de ${L2} (${fx(m2)}${u2}).`}${bestL?` ${bestL} tiene el mejor desempeño promedio.`:''}`,
+        keep:`No hay diferencia significativa entre los promedios${ctx} de ${L1} (${fx(m1)}${u1}) y ${L2} (${fx(m2)}${u2}).`}
+    };
+  }
+  case 'p1':{
+    const cut=parseFloat(hy.cut);if(!isFinite(cut))return{err:'Define el criterio de éxito: escribe el valor de corte (por ejemplo, ≤ 30).'};
+    const p0=parseFloat(hy.val);if(!(p0>0&&p0<1))return{err:'Escribe p₀, una proporción entre 0 y 1 (por ejemplo 0.8).'};
+    const ok=okFn(),n=S1.data.length,x=S1.data.filter(ok).length,ph=x/n,se=Math.sqrt(p0*(1-p0)/n),stat=(ph-p0)/se;
+    const c1=n*p0,c2=n*(1-p0),cr=critTxt(S1);
+    return{
+      name:'Prueba z para una proporción',
+      par:{sym:'p',words:`proporción poblacional de observaciones de ${S1.kpi} en ${S1.sys} que cumplen «${cr}» (éxito)`},
+      lhs:'p',rhs:g(p0),
+      h0w:`la proporción de éxito («${cr}») en ${S1.sys} ${H0W[tail]} ${g(p0)} (${pcn(p0)})`,
+      h1w:`la proporción de éxito («${cr}») en ${S1.sys} es ${REL[tail]} ${g(p0)} (${pcn(p0)})`,
+      dist:HM.mk('z'),stat,
+      just:[`La variable se convierte en categórica con dos resultados: éxito si «${cr}» y fracaso en caso contrario. Se contrasta una sola proporción contra un valor de referencia.`,
+        `Supuestos: observaciones independientes y aproximación normal válida si n·p₀ ≥ 10 y n·(1 − p₀) ≥ 10. Aquí n·p₀ = ${fx(c1,1)} ${c1>=10?'✓':'✗'} y n·(1 − p₀) = ${fx(c2,1)} ${c2>=10?'✓':'✗'}.`],
+      data:[`Criterio de éxito: ${cr}`,`Tamaño de muestra: n = ${n}${S1.n<S1.N?` (primeras ${n} de ${S1.N})`:''}`,`Éxitos: x = ${x}`,`Proporción muestral: ${PH} = x/n = ${x}/${n} = ${fx(ph,4)} (${pcn(ph)})`,`Proporción hipotética: p₀ = ${g(p0)}`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:`z = (${PH} − p₀) / √(p₀(1 − p₀)/n)`,
+      subst:[`Error estándar = √(${g(p0)}·${g(1-p0)}/${n}) = ${fx(se,4)}`,`z = (${fx(ph,4)} − ${g(p0)}) / ${fx(se,4)} = ${fx(stat,4)}`],
+      prac:{
+        reject:`En ${S1.sys}, ${x} de ${n} observaciones (${pcn(ph)}) cumplen «${cr}»; la proporción ${ph>p0?'supera':'es inferior a'} la de referencia (${pcn(p0)}).`,
+        keep:`En ${S1.sys}, ${x} de ${n} observaciones (${pcn(ph)}) cumplen «${cr}»; la proporción no difiere significativamente de la de referencia (${pcn(p0)}).`}
+    };
+  }
+  case 'p2':{
+    const cut=parseFloat(hy.cut);if(!isFinite(cut))return{err:'Define el criterio de éxito: escribe el valor de corte (se usa el mismo en las dos muestras).'};
+    const ok=okFn(),n1=S1.data.length,n2=S2.data.length,x1=S1.data.filter(ok).length,x2=S2.data.filter(ok).length;
+    const p1=x1/n1,p2=x2/n2,pc=(x1+x2)/(n1+n2);
+    if(!(pc>0&&pc<1))return{err:'Con ese criterio todas (o ninguna) de las observaciones son éxito: elige otro valor de corte.'};
+    const se=Math.sqrt(pc*(1-pc)*(1/n1+1/n2)),stat=(p1-p2)/se,same=S1.ki===S2.ki;
+    const L1=same?S1.sys:`${S1.kpi} (${S1.sys})`,L2=same?S2.sys:`${S2.kpi} (${S2.sys})`,cr=critTxt(S1);
+    const chk=[n1*pc,n1*(1-pc),n2*pc,n2*(1-pc)],chkOk=chk.every(v=>v>=5);
+    return{
+      name:'Prueba z para dos proporciones (muestras independientes)',
+      par:{sym:'p₁ − p₂',words:`diferencia entre las proporciones poblacionales de éxito («${cr}») de ${L1} (p₁) y ${L2} (p₂)`},
+      lhs:'p₁ − p₂',rhs:'0',
+      h0w:tail==='two'?`la proporción de éxito («${cr}») es igual en ${L1} y en ${L2}`:`la proporción de éxito («${cr}») de ${L1} es ${tail==='right'?'menor':'mayor'} o igual que la de ${L2}`,
+      h1w:tail==='two'?`la proporción de éxito es diferente entre ${L1} y ${L2}`:`la proporción de éxito de ${L1} es ${tail==='right'?'mayor':'menor'} que la de ${L2}`,
+      dist:HM.mk('z'),stat,
+      just:[`Se comparan las proporciones de éxito («${cr}») de dos grupos independientes. La variable se convierte en categórica (éxito / fracaso) con el mismo criterio en ambas muestras.`,
+        `Bajo H₀ las dos proporciones son iguales, por lo que se usa la proporción combinada ${PH}c = (x₁ + x₂)/(n₁ + n₂).`,
+        `Supuestos: muestras independientes y n₁·${PH}c, n₁(1 − ${PH}c), n₂·${PH}c, n₂(1 − ${PH}c) ≥ 5. Valores: ${chk.map(v=>fx(v,1)).join(', ')} ${chkOk?'✓':'✗'}.`],
+      data:[`Criterio de éxito (mismo en ambas muestras): ${cr}`,`Muestra 1 (${L1}): n₁ = ${n1}, x₁ = ${x1}, ${PH}₁ = ${fx(p1,4)} (${pcn(p1)})`,`Muestra 2 (${L2}): n₂ = ${n2}, x₂ = ${x2}, ${PH}₂ = ${fx(p2,4)} (${pcn(p2)})`,`Proporción combinada: ${PH}c = (${x1} + ${x2}) / (${n1} + ${n2}) = ${fx(pc,4)}`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:`z = (${PH}₁ − ${PH}₂) / √(${PH}c(1 − ${PH}c)(1/n₁ + 1/n₂))`,
+      subst:[`Error estándar = √(${fx(pc,4)}·${fx(1-pc,4)}·(1/${n1} + 1/${n2})) = ${fx(se,4)}`,`z = (${fx(p1,4)} − ${fx(p2,4)}) / ${fx(se,4)} = ${fx(stat,4)}`],
+      prac:{
+        reject:`${L1}: ${pcn(p1)}; ${L2}: ${pcn(p2)}. ${tail==='two'?`La proporción de cumplimiento de «${cr}» es distinta; ${p1>p2?L1:L2} cumple con más frecuencia.`:`La proporción de cumplimiento de «${cr}» de ${L1} es ${tail==='right'?'mayor':'menor'} que la de ${L2}.`}`,
+        keep:`${L1}: ${pcn(p1)}; ${L2}: ${pcn(p2)}. No hay diferencia significativa en la proporción de cumplimiento de «${cr}».`}
+    };
+  }
+  case 'v1':{
+    const n=S1.data.length;if(n<2)return{err:'Se necesitan al menos 2 observaciones (n ≥ 2).'};
+    const s02=parseFloat(hy.val);if(!(s02>0))return{err:'Escribe σ₀², la varianza hipotética (mayor que 0).'};
+    const st=stats(S1.data),s2=st.v;if(!(s2>0))return{err:'Todas las observaciones son iguales (s² = 0): no se puede calcular el estadístico.'};
+    const stat=(n-1)*s2/s02,u2=S1.unit?' '+S1.unit+'²':'',loc=`${S1.kpi} en ${S1.sys}`;
+    const more=s2>s02;
+    return{
+      name:'Prueba χ² (chi-cuadrada) para una varianza',
+      par:{sym:'σ²',words:`varianza poblacional de ${S1.kpi}${S1.unit?` (${S1.unit}²)`:''} en ${S1.sys} (mide la variabilidad o estabilidad)`},
+      lhs:'σ²',rhs:g(s02),
+      h0w:`la varianza de ${loc} ${H0W[tail]} ${g(s02)}${u2}`,
+      h1w:`la varianza de ${loc} es ${REL[tail]} ${g(s02)}${u2}${tail==='right'?' (hay más variabilidad)':tail==='left'?' (hay menos variabilidad)':''}`,
+      dist:HM.mk('chi',n-1),stat,
+      just:[`Se contrasta la variabilidad de una sola población (${loc}) contra un valor de referencia; la variable es cuantitativa.`,
+        `El estadístico χ² = (n − 1)s² / σ₀² sigue una distribución chi-cuadrada con n − 1 = ${n-1} grados de libertad.`,
+        `Supuestos: observaciones independientes y población normal.`],
+      data:[`Tamaño de muestra: n = ${n}${S1.n<S1.N?` (primeras ${n} de ${S1.N})`:''}`,`Varianza muestral: s² = ${fx(s2,4)}${u2} (s = ${fx(st.sd)}${ud(S1)})`,`Varianza hipotética: σ₀² = ${g(s02)}${u2}`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:'χ² = (n − 1)·s² / σ₀²',
+      subst:[`χ² = (${n} − 1)·${fx(s2,4)} / ${g(s02)} = ${fx(stat,4)}`],
+      prac:{
+        reject:`La varianza observada de ${loc} (s² = ${fx(s2,4)}) ${more?'supera':'es inferior a'} la hipotética (σ₀² = ${g(s02)}).`,
+        keep:`La varianza observada de ${loc} (s² = ${fx(s2,4)}) no difiere significativamente de la hipotética (σ₀² = ${g(s02)}).`}
+    };
+  }
+  case 'v2':{
+    const a=S1.data,b=S2.data,n1=a.length,n2=b.length;if(n1<2||n2<2)return{err:'Cada muestra necesita al menos 2 observaciones.'};
+    const A=stats(a),B=stats(b),v1=A.v,v2=B.v;if(!(v1>0&&v2>0))return{err:'Una de las muestras no tiene variación (s² = 0): no se puede calcular el estadístico.'};
+    const stat=v1/v2,same=S1.ki===S2.ki,L1=same?S1.sys:`${S1.kpi} (${S1.sys})`,L2=same?S2.sys:`${S2.kpi} (${S2.sys})`,ctx=same?` de ${S1.kpi}`:'';
+    const stab=v1<v2?L1:L2;
+    return{
+      name:'Prueba F para la razón de dos varianzas',
+      par:{sym:'σ₁² / σ₂²',words:`razón entre las varianzas poblacionales${ctx} de ${L1} (σ₁²) y ${L2} (σ₂²)`},
+      lhs:'σ₁² / σ₂²',rhs:'1',
+      h0w:tail==='two'?`la variabilidad${ctx} de ${L1} y ${L2} es igual (σ₁² = σ₂²)`:`la variabilidad${ctx} de ${L1} es ${tail==='right'?'menor':'mayor'} o igual que la de ${L2} (σ₁² ${tail==='right'?'≤':'≥'} σ₂²)`,
+      h1w:tail==='two'?`la variabilidad${ctx} de ${L1} y ${L2} es diferente (σ₁² ≠ σ₂²)`:`la variabilidad${ctx} de ${L1} es ${tail==='right'?'mayor':'menor'} que la de ${L2}`,
+      dist:HM.mk('f',n1-1,n2-1),stat,
+      just:[`Se comparan las varianzas (variabilidad) de dos grupos independientes (${L1} y ${L2}); la variable es cuantitativa.`,
+        `El estadístico F = s₁² / s₂² sigue una distribución F con (n₁ − 1, n₂ − 1) = (${n1-1}, ${n2-1}) grados de libertad.`,
+        `Supuestos: muestras independientes y poblaciones normales.`],
+      data:[`Muestra 1 (${L1}): n₁ = ${n1}, s₁² = ${fx(v1,4)}${S1.unit?' '+S1.unit+'²':''}`,`Muestra 2 (${L2}): n₂ = ${n2}, s₂² = ${fx(v2,4)}${S2.unit?' '+S2.unit+'²':''}`,`Razón hipotética: σ₁² / σ₂² = 1`,`Nivel de significancia: α = ${g(parseFloat(hy.alpha))}`],
+      formula:'F = s₁² / s₂²',
+      subst:[`F = ${fx(v1,4)} / ${fx(v2,4)} = ${fx(stat,4)}`],
+      prac:{
+        reject:`Varianzas muestrales: ${L1}, s² = ${fx(v1,4)}; ${L2}, s² = ${fx(v2,4)}. ${tail==='two'?'La variabilidad es distinta':`La variabilidad de ${L1} es ${tail==='right'?'mayor':'menor'} que la de ${L2}`}; ${stab} presenta menor variabilidad.`,
+        keep:`Varianzas muestrales: ${L1}, s² = ${fx(v1,4)}; ${L2}, s² = ${fx(v2,4)}. No hay diferencia significativa en la variabilidad.`}
+    };
+  }}
+}
+
+/* ---------- gráfica de la zona de rechazo ---------- */
+function distSvg(d,stat,r,alpha,tail){
+  const Wd=W,Hd=H,m={l:46,r:18,t:54,b:62},pw=Wd-m.l-m.r,ph=Hd-m.t-m.b,base=Hd-m.b;
+  let x0,x1;
+  if(d.sym){const lim=Math.max(4,Math.abs(stat)*1.15,Math.abs(r.lo||0)*1.25,Math.abs(r.hi||0)*1.25);x0=-lim;x1=lim;}
+  else{
+    x1=Math.max(d.q(0.995),stat*1.15,(r.hi||0)*1.2);
+    const big=d.type==='chi'?d.a>=8:(d.a>=8&&d.b>=8);
+    x0=big?d.q(0.0005)*0.8:0;
+    x0=Math.min(x0,stat*0.85,r.lo&&r.lo>0?r.lo*0.85:x0);x0=Math.max(0,x0);
+  }
+  const N=260,xs=[],ys=[];let ymax=0;
+  for(let i=0;i<=N;i++){const x=x0+(x1-x0)*i/N;xs.push(x);const y=d.pdf(x);ys.push(y);if(Number.isFinite(y)&&x>=x0+(x1-x0)*0.01)ymax=Math.max(ymax,y);}
+  ymax*=1.1;
+  const xx=v=>m.l+pw*(v-x0)/(x1-x0),yy=v=>m.t+ph*(1-Math.min(Math.max(v,0),ymax)/ymax);
+  const curve=xs.map((x,i)=>`${i?'L':'M'}${xx(x).toFixed(1)},${yy(ys[i]).toFixed(1)}`).join(' ');
+  const region=(a,b)=>{
+    a=Math.max(a,x0);b=Math.min(b,x1);if(!(b>a))return'';
+    const k=80,pts=[];for(let i=0;i<=k;i++){const x=a+(b-a)*i/k;pts.push(`L${xx(x).toFixed(1)},${yy(d.pdf(x)).toFixed(1)}`);}
+    return`<path d="M${xx(a).toFixed(1)},${yy(0)} ${pts.join(' ')} L${xx(b).toFixed(1)},${yy(0)} Z" fill="#c0392b" fill-opacity=".38"/>`;
+  };
+  const RED='#c0392b',GRN='#2e9e5b',vc=r.inReg?RED:GRN,s=d.s;
+  const sx=Math.min(Math.max(xx(stat),m.l),Wd-m.r);
+  let shade='',crit='';
+  if(r.lo!==null){shade+=region(x0,r.lo);crit+=`<line x1="${xx(r.lo)}" x2="${xx(r.lo)}" y1="${m.t}" y2="${base}" stroke="${RED}" stroke-width="1.3" stroke-dasharray="4 3"/><text x="${sx>=xx(r.lo)&&sx<=xx(r.lo)+100?xx(r.lo)-5:xx(r.lo)+5}" y="${m.t+10}" text-anchor="${sx>=xx(r.lo)&&sx<=xx(r.lo)+100?'end':'start'}" style="fill:${RED};font-size:11px">${s} crít = ${fx(r.lo,3)}</text>`;}
+  if(r.hi!==null){shade+=region(r.hi,x1);crit+=`<line x1="${xx(r.hi)}" x2="${xx(r.hi)}" y1="${m.t}" y2="${base}" stroke="${RED}" stroke-width="1.3" stroke-dasharray="4 3"/><text x="${sx<=xx(r.hi)&&sx>=xx(r.hi)-100?xx(r.hi)+5:xx(r.hi)-5}" y="${m.t+10}" text-anchor="${sx<=xx(r.hi)&&sx>=xx(r.hi)-100?'start':'end'}" style="fill:${RED};font-size:11px">${s} crít = ${fx(r.hi,3)}</text>`;}
+  const stLine=`<line x1="${sx}" x2="${sx}" y1="${m.t-8}" y2="${base}" stroke="${vc}" stroke-width="2.4"/><circle cx="${sx}" cy="${base}" r="4" fill="${vc}"/><text x="${Math.min(Math.max(sx,m.l+46),Wd-m.r-46)}" y="${m.t-16}" text-anchor="middle" style="fill:${vc};font-size:12px;font-weight:700">${s} = ${fx(stat,3)}</text>`;
+  const tk=scale(x0,x1).t.filter(v=>v>=x0-1e-9&&v<=x1+1e-9);
+  const ticks=tk.map(v=>`<line x1="${xx(v)}" x2="${xx(v)}" y1="${base}" y2="${base+4}" class="ax"/><text x="${xx(v)}" y="${base+16}" text-anchor="middle">${g(v)}</text>`).join('');
+  const verdict=r.inReg?`El estadístico cae en la región de rechazo → se rechaza H₀`:`El estadístico no cae en la región de rechazo → no se rechaza H₀`;
+  return`<svg viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="Zona de rechazo y decisión">
+<text x="${m.l}" y="16" style="fill:var(--ink);font-size:12px;font-weight:700">${esc(d.name)} · α = ${g(alpha)} · ${TAILN[tail]}</text>
+<line x1="${m.l}" x2="${Wd-m.r}" y1="${base}" y2="${base}" class="ax"/>
+${shade}<path d="${curve}" fill="none" stroke="var(--s0)" stroke-width="2"/>${crit}${stLine}${ticks}
+<text x="${m.l+pw/2}" y="${base+32}" text-anchor="middle" style="fill:var(--ink)">Valores del estadístico ${s}</text>
+<rect x="${m.l}" y="${base+40}" width="11" height="11" fill="#c0392b" fill-opacity=".38"/><text x="${m.l+16}" y="${base+50}">Región de rechazo (área = α)</text>
+<text x="${Wd-m.r}" y="${base+50}" text-anchor="end" style="fill:${vc};font-size:12px;font-weight:700">${verdict}</text>
+</svg>`;
+}
+
+/* ---------- los 13 pasos ---------- */
+function finish(sp,S1,S2,alpha,q){
+  const tail=hy.tail,d=sp.dist,r=HM.decide(d,sp.stat,tail,alpha),s=d.s,rej=r.reject,A=g(alpha);
+  const rel={two:'≠',right:'>',left:'<'}[tail],rel0={two:'=',right:'≤',left:'≥'}[tail];
+  const dfTxt=d.type==='z'?'':d.type==='f'?`gl = (${g(d.a)}, ${g(d.b)})`:`gl = ${Number.isInteger(d.a)?d.a:fx(d.a,2)}`;
+  const region=d.sym
+    ?(tail==='two'?`Rechazar H₀ si ${s} < ${fx(r.lo,4)} o ${s} > ${fx(r.hi,4)}`:tail==='right'?`Rechazar H₀ si ${s} > ${fx(r.hi,4)}`:`Rechazar H₀ si ${s} < ${fx(r.lo,4)}`)
+    :(tail==='two'?`Rechazar H₀ si ${s} < ${fx(r.lo,4)} o ${s} > ${fx(r.hi,4)}`:tail==='right'?`Rechazar H₀ si ${s} > ${fx(r.hi,4)}`:`Rechazar H₀ si ${s} < ${fx(r.lo,4)}`);
+  const critTxt2=tail==='two'?(d.sym?`${s} crítico = ±${fx(r.hi,4)}`:`${s} crítico inferior = ${fx(r.lo,4)}; ${s} crítico superior = ${fx(r.hi,4)}`):`${s} crítico = ${fx(tail==='right'?r.hi:r.lo,4)}`;
+  const svg=distSvg(d,sp.stat,r,alpha,tail);
+  const pr=hy.preset?PRESETS.find(x=>x.id===hy.preset):null;
+  const jl=pr&&pr.type===hy.type?[pr.just,...(pr.jf?[{f:pr.jf}]:[])]:[sp.name,...sp.just];
+  const pn=r.p<0.0001?'p < 0.0001':`p = ${pf(r.p,alpha)}`;
+  const cmp=r.p<0.0001?`p < 0.0001 y α = ${A}`:`${pf(r.p,alpha)} ${rej?'<':'≥'} ${A}`;
+  const steps=[
+    {title:'Pregunta de investigación',lines:[q]},
+    {title:'Parámetro poblacional de interés',lines:[`${sp.par.sym}: ${sp.par.words}.`]},
+    {title:'Hipótesis nula y alternativa',lines:[{f:`H₀: ${sp.lhs} ${rel0} ${sp.rhs}`},`H₀: ${sp.h0w}.`,{f:`H₁: ${sp.lhs} ${rel} ${sp.rhs}`},`H₁: ${sp.h1w}.`]},
+    {title:'Tipo de prueba',lines:[tail==='two'?'Bilateral / Dos colas.':tail==='right'?'Unilateral, cola derecha.':'Unilateral, cola izquierda.']},
+    {title:'Nivel de significancia',lines:[`α = ${A}`,`N.C. = ${g(1-alpha)}`]},
+    {title:'Prueba elegida y justificación',lines:jl},
+    {title:'Datos, fórmula y sustitución',lines:[...sp.data,{f:sp.formula},...sp.subst.map(t=>({f:t}))]},
+    {title:'Estadístico de prueba, valor p y valor crítico',lines:[`Estadístico de prueba: ${s} = ${fx(sp.stat,4)}${dfTxt?` (${dfTxt})`:''}`,`Valor ${pn}`,`${critTxt2}`,`Región de rechazo: ${region}.`,`Comparación: ${rej?'valor p < α':'valor p ≥ α'} (${cmp}), por lo tanto ${rej?'se rechaza':'no se rechaza'} H₀.`]},
+    {title:'Gráfica',lines:[],graph:true},
+    {title:'Decisión',lines:[`El estadístico de prueba (${s} = ${fx(sp.stat,4)}) se encuentra ${rej?'dentro de la zona de rechazo, por lo tanto se rechaza':'fuera de la zona de rechazo, por lo tanto no se rechaza'} H₀.`],verdict:rej?'rej':'keep'},
+    {title:'Conclusiones',lines:[`Conclusión estadística: Con un nivel de significancia de ${A}, ${rej?'hay':'no hay'} evidencia estadística suficiente para afirmar que ${sp.h1w}.`,`Conclusión práctica: ${rej?sp.prac.reject:sp.prac.keep}`]},
+    {title:'Error tipo I',lines:[`Rechazar H₀ cuando es verdadera: concluir que ${sp.h1w} cuando en realidad ${sp.h0w}. Probabilidad de cometerlo: α = ${A} (${pcn(alpha)}).`]},
+    {title:'Error tipo II',lines:[`No rechazar H₀ cuando es falsa: concluir que ${sp.h0w} cuando en realidad ${sp.h1w}. Probabilidad de cometerlo: β.`]}
+  ];
+  const dc=hy.preset&&DOC[hy.preset];
+  steps[11].title='Error Tipo I';steps[12].title='Error Tipo II';
+  steps[6].fd={d:sp.data,f:sp.formula,s:sp.subst,dt:(DOC[hy.preset]||{}).dt};
+  if(hy.preset==='p2'&&S2){
+    const n1=S1.data.length,n2=S2.data.length,A1=stats(S1.data),B1=stats(S2.data),u=S1.unit?' '+S1.unit:'',Sp='S<sub>p</sub>';
+    const sp2=((n1-1)*A1.v+(n2-1)*B1.v)/(n1+n2-2),spv=Math.sqrt(sp2),tt=(A1.mean-B1.mean)/(spv*Math.sqrt(1/n1+1/n2));
+    const sq=`√(${fr('1','n₁')} + ${fr('1','n₂')})`,sq2=`√(${fr('1',n1)} + ${fr('1',n2)})`;
+    const L=(x,c)=>`<div class="mx${c?' res':''}">${x}</div>`;
+    steps[6].fd.hf=L(`t<sub>cal</sub> <b>=</b> ${frh('x̄₁ − x̄₂',`${Sp}·${sq}`)}`)+L(`${Sp} <b>=</b> √${Sp}²`)+L(`${Sp}² <b>=</b> ${frh('(n₁ − 1)·s₁² + (n₂ − 1)·s₂²','n₁ + n₂ − 2')}`);
+    steps[6].fd.hs=L(`${Sp}² <b>=</b> ${frh(`(${n1} − 1)·${fx(A1.sd,3)}² + (${n2} − 1)·${fx(B1.sd,3)}²`,`${n1} + ${n2} − 2`)} <b>=</b> ${fx(sp2,3)}${u?u+'²':''}`)+L(`${Sp} <b>=</b> √${fx(sp2,3)} <b>=</b> ${fx(spv,2)}${u}`)+L(`t<sub>cal</sub> <b>=</b> ${frh(`${fx(A1.mean,3)} − ${fx(B1.mean,3)}`,`${fx(spv,2)}·${sq2}`)} <b>=</b> ${fx(tt,3)}`,1);
+    steps[6].fd.hg=welchHtml+`<div class="fb"><div class="mx res">gl <b>=</b> ${fx(d.a,2)}</div></div>`;
+  }
+  const cv=tail==='two'?(d.sym?'±'+fx(r.hi,4):fx(r.lo,4)+' y '+fx(r.hi,4)):fx(tail==='right'?r.hi:r.lo,4);
+  steps[7].cd={k:[['Estadístico '+s+' calculado',fx(sp.stat,4)],...(dfTxt?[['Grados de libertad',dfTxt.replace('gl = ','')]]:[]),['Valor p',r.p<0.0001?'< 0.0001':pf(r.p,alpha)],['Valor crítico '+s,cv],['Nivel de significancia α',A]],reg:region,cmp:`valor p = ${r.p<0.0001?'< 0.0001':pf(r.p,alpha)}  ${rej?'<':'≥'}  α = ${A}`,rej};
+  if(dc){steps[2].lines=[{f:'H₀: '+dc.h0},{f:'H₁: '+dc.h1}];steps[1].lines=dc.pa;steps[9].lines=[dc.dd];steps[9].verdict='';steps[10].lines=['Conclusión Estadística: '+dc.cs,'Conclusión Práctica: '+dc.cp];steps[11].lines=[dc.e1];steps[12].lines=[dc.e2];}
+  const tn=TYPES.find(t=>t.id===hy.type).name;
+  const row={type:hy.type,typeName:tn,test:sp.name,h0:`${sp.lhs} ${rel0} ${sp.rhs}`,h1:`${sp.lhs} ${rel} ${sp.rhs}`,tail,alpha,sname:s,stat:sp.stat,df:dfTxt,p:r.p,reject:rej};
+  if(dc){row.h0=dc.h0;row.h1=dc.h1;}
+  return{ok:true,steps,svg,row,verdict:rej};
+}
+const fr=(n,d)=>`<span class="fr"><span>${esc(n)}</span><span>${esc(d)}</span></span>`;
+const unp=t=>{if(t[0]!=='('||t[t.length-1]!==')')return t;let k=0;for(let i=0;i<t.length;i++){k+=t[i]==='('?1:t[i]===')'?-1:0;if(!k&&i<t.length-1)return t;}return t.slice(1,-1);};
+function mth(t){return t.split(' = ').map(p=>{let k=0,at=-1;for(let i=0;i<p.length-2;i++){k+=p[i]==='('?1:p[i]===')'?-1:0;if(!k&&p.substr(i,3)===' / ')at=i;}return at<0?esc(p):fr(unp(p.slice(0,at)),unp(p.slice(at+3)));}).join(' <b>=</b> ');}
+const fdHtml=f=>`<div class="dg">${f.dt?f.dt.map(([a,b])=>`<div class="dc"><span>${a}</span><b>${b}</b></div>`).join(''):f.d.filter(l=>!/^(Diferencia|Razón) hipotética/.test(l)).map(l=>{const i=l.indexOf(': ');return i<0?`<div class="dc"><span>${esc(l)}</span></div>`:`<div class="dc"><span>${esc(l.slice(0,i))}</span><b>${esc(l.slice(i+2))}</b></div>`;}).join('')}</div>${f.hf?`<div class="fb"><span class="fl">Fórmulas</span>${f.hf}</div><div class="fb"><span class="fl">Sustitución</span>${f.hs}</div>${f.hg}`:`<div class="fb"><span class="fl">Fórmula</span><div class="mx">${mth(f.f)}</div></div><div class="fb"><span class="fl">Sustitución y resultado</span>${f.s.filter(l=>!l.startsWith('Error estándar')).map((l,i,a)=>`<div class="mx${i===a.length-1?' res':''}">${mth(l)}</div>`).join('')}</div>`}`;
+const cdHtml=c=>`<div class="dg">${c.k.map(([a,b],i)=>`<div class="dc"${i===0?' style="border-color:var(--acc)"':''}><span>${esc(a)}</span><b style="font-size:1.25rem">${esc(b)}</b></div>`).join('')}</div><div class="fb"><span class="fl">Región de rechazo</span><div class="mx">${esc(c.reg)}</div></div><div class="fb"><span class="fl">Comparación</span><div class="mx">${esc(c.cmp)} <span class="vd ${c.rej?'rej':'keep'}" style="margin:0">${c.rej?'Se rechaza H₀':'No se rechaza H₀'}</span></div></div>`;
+const frh=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const welchHtml=`<div class="fb"><span class="fl">Grados de libertad (Welch)</span><div class="mx">gl <b>=</b> ${frh(`(${fr('s₁²','n₁')} + ${fr('s₂²','n₂')})²`,`${frh(`(${fr('s₁²','n₁')})²`,'n₁ − 1')} + ${frh(`(${fr('s₂²','n₂')})²`,'n₂ − 1')}`)}</div></div>`;
+function stepsHtml(o){
+  return`<ol class="steps">${o.steps.map(st=>`<li><b>${esc(st.title)}</b>${st.fd?fdHtml(st.fd):st.cd?cdHtml(st.cd):st.lines.map(l=>typeof l==='string'?(/^Conclusión (Estadística|Práctica):/.test(l)?`<p><b>${esc(l.slice(0,l.indexOf(':')+1))}</b>${esc(l.slice(l.indexOf(':')+1))}</p>`:`<p>${esc(l)}</p>`):l.f.startsWith('gl = (s₁²/n₁')?welchHtml:`<p><span class="fm">${esc(l.f)}</span></p>`).join('')}${st.graph?`<div class="hg">${o.svg}</div>`:''}${st.verdict?`<div class="vd ${st.verdict}">${st.verdict==='rej'?'Se rechaza H₀':'No se rechaza H₀'}</div>`:''}</li>`).join('')}</ol>`;
+}
+
+/* ---------- cálculo y render ---------- */
+function compute(){
+  const two=isTwo(),alpha=parseFloat(hy.alpha);
+  const S1=pick(hy.s1,hy.n1),S2=two?pick(hy.s2,hy.n2):null;
+  const q=hy.qDirty&&hy.q.trim()?hy.q.trim():autoQ(S1,S2);
+  if(!S1||(two&&!S2))return{err:'No hay datos para analizar. Captura tus datos en la pestaña «Estadística descriptiva».',q};
+  if(two&&S1.key===S2.key)return{err:'Elige dos muestras distintas (otro sistema u otro KPI).',q};
+  if(!(alpha>0&&alpha<1))return{err:'Elige un nivel de significancia entre 0 y 1.',q};
+  const sp=buildSpec(S1,S2);if(sp.err)return{err:sp.err,q};
+  const o=finish(sp,S1,S2,alpha,q);o.q=q;return o;
+}
+function result(){}
+const SELOPT=(o,sel)=>o.map(s=>`<option value="${s.key}"${s.key===sel?' selected':''}>${esc(s.kpi)} · ${esc(s.sys)} (N = ${s.data.length})</option>`).join('');
+function fixKeys(){
+  const o=srcs();if(!o.length)return o;
+  if(!o.some(s=>s.key===hy.s1))hy.s1=o[0].key;
+  if(!o.some(s=>s.key===hy.s2)||hy.s2===hy.s1){const a=o.find(s=>s.key===hy.s1),alt=o.find(s=>s.key!==hy.s1&&s.ki===a.ki)||o.find(s=>s.key!==hy.s1);hy.s2=alt?alt.key:hy.s1;}
+  return o;
+}
+function drawForm(){
+  const sel=hy.sel||'all';
+  const card=(id,n,t,sub)=>`<button type="button" class="pk${id===sel?' on':''}" data-sel="${id}" aria-pressed="${id===sel}"><span class="pn">${n}</span><span class="pt">${esc(t)}</span><span class="ps">${esc(sub)}</span></button>`;
+  $('hform').innerHTML=`<h2>Tipo de problema</h2><div class="pg">${card('all','★','Informe completo','Los 6 problemas')}${PRESETS.map((p,i)=>card(p.id,i+1,TYPES.find(t=>t.id===p.type).name,p.label.split(' · ').slice(2).join(' · '))).join('')}</div>${hy.presetMsg?`<p class="err">${esc(hy.presetMsg)}</p>`:''}`;
+}
+function drawSaved(){
+  const el=$('hsaved'),sel=hy.sel||'all';
+  const tbl=`<div class="tw"><table><tr><th>#</th><th>Prueba</th><th>H₀ / H₁</th><th>α</th><th>Estadístico</th><th>Valor p</th><th>Decisión</th></tr>${saved.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.row.typeName)}</td><td style="text-align:left">${esc(s.row.h0)} / ${esc(s.row.h1)}</td><td>${g(s.row.alpha)}</td><td>${esc(s.row.sname)} = ${fx(s.row.stat,3)}</td><td>${pf(s.row.p,s.row.alpha)}</td><td>${s.row.reject?'Rechazar H₀':'No rechazar H₀'}</td></tr>`).join('')}</table></div>`;
+  const one=saved.find(x=>x.preset===sel),oi=saved.indexOf(one);
+  const det=one?`<div id="d_${one.preset}" style="margin-top:16px"><h2>Problema ${oi+1}: ${esc(one.row.typeName)} · ${one.row.reject?'se rechaza H₀':'no se rechaza H₀'}</h2>${one.html}</div>`:'';
+  el.innerHTML=`<div class="card"><h2>Informe de contrastes (${saved.length} de 6)</h2>${tbl}${det}<div class="row" style="margin:10px 0 0"><button class="b" id="h_pdf"${saved.length?'':' disabled'}>Descargar informe en PDF</button></div><div class="cap" id="hmsg" role="status"></div></div>`;
+}
+function solve(){
+  const keep=Object.assign({},hy),fail=[];saved=[];
+  PRESETS.forEach(p=>{if(!applyPreset(p)){fail.push(p.label);return;}const o=compute();if(!o.ok){fail.push(p.label+' ('+o.err+')');return;}saved.push({id:p.id,preset:p.id,row:o.row,steps:o.steps,svg:o.svg,html:stepsHtml(o)});});
+  Object.assign(hy,keep);hy.presetMsg=fail.length?'No se pudieron resolver: '+fail.join('; ')+'. Revisa los nombres de KPI y sistemas en «Estadística descriptiva».':'';
+}
+function hyRefresh(){solve();drawForm();drawSaved();}
+window.hyRefresh=hyRefresh;
+
+/* ---------- eventos ---------- */
+$('hform').addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sel]');if(!b)return;hy.sel=b.dataset.sel;drawForm();drawSaved();const d=$('d_'+hy.sel);if(d&&d.scrollIntoView)d.scrollIntoView({behavior:'smooth',block:'start'});});
+$('hres').addEventListener('click',e=>{
+  if(e.target.id!=='h_save'||!last)return;
+  saved.push({id:Date.now()+Math.random(),row:last.row,steps:last.steps,svg:last.svg,html:stepsHtml(last)});
+  persist();drawSaved();confirmDel=false;
+  const m=$('hmsg2');if(m)m.textContent=`Guardado como contraste ${saved.length}. Aparece abajo, en el informe.`;
+});
+$('hsaved').addEventListener('click',e=>{
+  const id=e.target.id,del=e.target.dataset&&e.target.dataset.del;
+  if(del){saved=saved.filter(s=>String(s.id)!==del);persist();confirmDel=false;drawSaved();}
+  else if(id==='h_clear'){if(!confirmDel){confirmDel=true;drawSaved();}else{saved=[];persist();confirmDel=false;drawSaved();}}
+  else if(id==='h_pdf')hyPdf();
+});
+document.addEventListener('click',e=>{if(confirmDel&&e.target.id!=='h_clear'){confirmDel=false;if($('h_clear'))drawSaved();}});
+$('vtabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  const v=b.dataset.v;
+  [...$('vtabs').children].forEach(x=>x.setAttribute('aria-selected',String(x===b)));
+  $('v-desc').hidden=v!=='desc';$('v-hyp').hidden=v!=='hyp';$('v-proj').hidden=v!=='proj';if(v==='proj'&&window.projRefresh)projRefresh();
+  if(v==='hyp')hyRefresh();
+});
+
+/* ---------- PDF del informe ---------- */
+const PM=[[/μ/g,'mu'],[/σ/g,'sigma'],[/α/g,'alfa'],[/β/g,'beta'],[/χ/g,'chi'],[/≠/g,'!='],[/≤/g,'<='],[/≥/g,'>='],[/−/g,'-'],[/[–—]/g,'-'],[/₀/g,'0'],[/₁/g,'1'],[/₂/g,'2'],
+  [/x̄/g,'x-barra'],[/p̂/g,'p^'],[/√/g,'raiz '],[/→/g,'->'],[/✓/g,'(ok)'],[/✗/g,'(no)'],[/⚠/g,'(!)'],[/○/g,'-'],[/…/g,'...'],[/≈/g,'~']];
+const pdfTxt=s=>{let t=String(s);PM.forEach(([a,b])=>{t=t.replace(a,b);});return t.replace(/[^\x00-\xFF]/g,'?');};
+async function hyPdf(){
+  const msg=t=>{const m=$('hmsg');if(m)m.textContent=t;};
+  if(!saved.length){msg('Guarda al menos un contraste.');return;}
+  if(!window.jspdf){msg('No se pudo cargar la librería de PDF.');return;}
+  msg('Generando PDF…');
+  try{
+    const d=new window.jspdf.jsPDF({unit:'pt',format:'letter'}),X=40,CW=532,BOT=748;let y=56;
+    const need=h=>{if(y+h>BOT){d.addPage();y=50;}};
+    const para=(txt,size=10,bold=false,ind=0)=>{d.setFont('helvetica',bold?'bold':'normal');d.setFontSize(size);
+      d.splitTextToSize(pdfTxt(txt),CW-ind).forEach(l=>{need(size*1.4);d.text(l,X+ind,y);y+=size*1.4;});};
+    para('Contraste de hipótesis - Informe de resultados',16,true);y+=2;
+    para(new Date().toLocaleDateString('es-MX'),9);y+=8;
+    para('Resumen de contrastes',12,true);
+    saved.forEach((s,i)=>{const r=s.row;para(`${i+1}. ${r.typeName}: H0: ${r.h0}  vs  H1: ${r.h1}  |  alfa = ${g(r.alpha)}  |  ${r.sname} = ${fx(r.stat,3)}  |  p ${pS(r.p,r.alpha)}  |  ${r.reject?'Rechazar H0':'No rechazar H0'}`,9,false,6);});
+    for(let i=0;i<saved.length;i++){
+      const s=saved[i];d.addPage();y=50;
+      para(`Contraste ${i+1}: ${s.row.typeName}`,14,true);y+=4;
+      for(let k=0;k<s.steps.length;k++){
+        const st=s.steps[k];y+=4;para(`${k+1}. ${st.title}`,10.5,true);
+        st.lines.forEach(l=>para(typeof l==='string'?l:l.f,9.5,false,10));
+        if(st.graph){const hh=400*H/W;need(hh+10);d.addImage(await png(s.svg),'PNG',X+10,y+2,400,hh);y+=hh+10;}
+      }
+    }
+    await dl('informe_contrastes_hipotesis.pdf',d.output('blob'));
+    msg('PDF listo.');
+  }catch(e){msg('No se pudo generar el PDF.');}
+}
+})();
+
+sample();
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id),E=esc,F=(x,k=2)=>fx(x,k),PF=p=>p<1e-4?'&lt; 0.0001':fx(p,4);
+const P={part:'all',th:[35,85,2],bin:[10,.5],sp:[.5,2,5],sc:[[.5,95],[2,85],[5,60]]};
+/* ---- matemáticas ---- */
+function lg(x){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,.1208650973866179e-2,-.5395239384953e-5];let y=x,t=x+5.5;t-=(x+.5)*Math.log(t);let s=1.000000000190015;for(const k of c)s+=k/++y;return -t+Math.log(2.5066282746310005*s/x);}
+function bcf(a,b,x){const qab=a+b,qap=a+1,qam=a-1,T=1e-30;let c=1,d=1-qab*x/qap;if(Math.abs(d)<T)d=T;d=1/d;let h=d;for(let m=1;m<=300;m++){const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));d=1+aa*d;if(Math.abs(d)<T)d=T;c=1+aa/c;if(Math.abs(c)<T)c=T;d=1/d;h*=d*c;aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));d=1+aa*d;if(Math.abs(d)<T)d=T;c=1+aa/c;if(Math.abs(c)<T)c=T;d=1/d;const l=d*c;h*=l;if(Math.abs(l-1)<3e-12)break;}return h;}
+function ib(x,a,b){if(x<=0)return 0;if(x>=1)return 1;const bt=Math.exp(lg(a+b)-lg(a)-lg(b)+a*Math.log(x)+b*Math.log(1-x));return x<(a+1)/(a+b+2)?bt*bcf(a,b,x)/a:1-bt*bcf(b,a,1-x)/b;}
+const pT=(t,df)=>ib(df/(df+t*t),df/2,.5),pFd=(f,d1,d2)=>ib(d2/(d2+d1*f),d2/2,d1/2);
+function erfc(x){const z=Math.abs(x),t=1/(1+.5*z),r=t*Math.exp(-z*z-1.26551223+t*(1.00002368+t*(.37409196+t*(.09678418+t*(-.18628806+t*(.27886807+t*(-1.13520398+t*(1.48851587+t*(-.82215223+t*.17087277)))))))));return x>=0?r:2-r;}
+const Phi=z=>.5*erfc(-z/Math.SQRT2);
+function zinv(p){let a=-10,b=10;for(let i=0;i<90;i++){const m=(a+b)/2;Phi(m)<p?a=m:b=m;}return(a+b)/2;}
+const binP=(n,p,k)=>k<0||k>n?0:Math.exp(lg(n+1)-lg(k+1)-lg(n-k+1)+(p>0?k*Math.log(p):(k?-Infinity:0))+(p<1?(n-k)*Math.log(1-p):(n-k?-Infinity:0)));
+const poiP=(l,k)=>Math.exp(-l+k*Math.log(l)-lg(k+1));
+const cum=(f,k)=>{let s=0;for(let i=0;i<=k;i++)s+=f(i);return s;};
+function inv(M){const n=M.length,A=M.map((r,i)=>[...r,...Array.from({length:n},(_,j)=>+(i===j))]);for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];const d=A[c][c];for(let j=0;j<2*n;j++)A[c][j]/=d;for(let r=0;r<n;r++)if(r!==c){const f=A[r][c];for(let j=0;j<2*n;j++)A[r][j]-=f*A[c][j];}}return A.map(r=>r.slice(n));}
+const mean=a=>a.reduce((x,y)=>x+y,0)/a.length,S=a=>a.reduce((x,y)=>x+y,0);
+function simple(x,y){const n=x.length,sx=S(x),sy=S(y),sxy=S(x.map((v,i)=>v*y[i])),sxx=S(x.map(v=>v*v)),syy=S(y.map(v=>v*v));
+  const b1=(n*sxy-sx*sy)/(n*sxx-sx*sx),b0=sy/n-b1*sx/n,r=(n*sxy-sx*sy)/Math.sqrt((n*sxx-sx*sx)*(n*syy-sy*sy)),yh=x.map(v=>b0+b1*v),e=y.map((v,i)=>v-yh[i]),sse=S(e.map(v=>v*v)),se=Math.sqrt(sse/(n-2)),sb=se/Math.sqrt(sxx-sx*sx/n),t=b1/sb;
+  return{n,sx,sy,sxy,sxx,syy,b1,b0,r,r2:r*r,yh,e,sse,se,sb,t,p:pT(t,n-2)};}
+function multi(X,y){const n=y.length,k=X[0].length,Z=X.map(r=>[1,...r]),p=k+1,XtX=Array.from({length:p},(_,i)=>Array.from({length:p},(_,j)=>S(Z.map(r=>r[i]*r[j])))),Xty=Array.from({length:p},(_,i)=>S(Z.map((r,t)=>r[i]*y[t]))),C=inv(XtX),b=C.map(r=>S(r.map((v,j)=>v*Xty[j])));
+  const yh=Z.map(r=>S(r.map((v,j)=>v*b[j]))),e=y.map((v,i)=>v-yh[i]),sse=S(e.map(v=>v*v)),ym=mean(y),sst=S(y.map(v=>(v-ym)**2)),ssr=sst-sse,df=n-p,mse=sse/df,se=b.map((_,i)=>Math.sqrt(mse*C[i][i])),t=b.map((v,i)=>v/se[i]),pv=t.map(v=>pT(v,df)),r2=ssr/sst,Fv=(ssr/k)/mse;
+  return{n,k,b,se,t,pv,r2,r2a:1-(1-r2)*(n-1)/df,sse,ssr,sst,df,mse,s:Math.sqrt(mse),F:Fv,pF:pFd(Fv,k,df),yh,e};}
+/* ---- datos ---- */
+function pd(kr,pr){const k=kpis.find(k=>kr.test(k.name));if(!k)return null;const s=parse(k.raw).find(s=>pr.test(s.name));return s?s.data:null;}
+const getD=()=>{const rb=/(^|\s)B$/i,ra=/(^|\s)A$/i,L=/lat/i,V=/veloc|descarga/i,Pl=/p[eé]rdida|paquet/i;return{LB:pd(L,rb),VB:pd(V,rb),PB:pd(Pl,rb),LA:pd(L,ra)};};
+/* ---- ui helpers ---- */
+const card=(t,h)=>`<div class="card"><h2>${t}</h2>${h}</div>`,fm=s=>`<span class="fm">${s}</span>`,li=a=>`<ul class="ins">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+const tbl=(h,rows)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`;
+const inp=(id,v,l,st='any')=>`<label>${l}<input class="pi" data-id="${id}" type="number" step="${st}" value="${v}"></label>`;
+const fr=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`,mx=(h,r)=>`<div class="mx${r?' res':''}">${h}</div>`,fb=(l,h)=>`<div class="fb"><span class="fl">${l}</span>${h}</div>`,dg=a=>`<div class="dg">${a.map(([k,v])=>`<div class="dc"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`;
+const en=t=>`<div class="fb"><span class="fl">Enunciado</span>${t}</div>`;
+const step=(n,t,h)=>`<li><b>${t}</b>${h}</li>`,steps=a=>`<ol class="steps">${a.join('')}</ol>`;
+function xy(pts,xl,yl,o={}){const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),sx=scale(Math.min(...xs),Math.max(...xs)),sy=scale(Math.min(...ys,o.zero?0:Infinity),Math.max(...ys,o.zero?0:-Infinity)),{y,g}=frame(sy),x=v=>M.l+(W-M.l-M.r)*(v-sx.a)/(sx.b-sx.a);
+  const xt=sx.t.map(v=>`<text x="${x(v)}" y="${H-30}" text-anchor="middle">${F(v,sx.b-sx.a<5?1:0)}</text>`).join('');
+  const ln=o.line?`<line x1="${x(o.line[0])}" y1="${y(o.line[1])}" x2="${x(o.line[2])}" y2="${y(o.line[3])}" stroke="var(--s1)" stroke-width="2"/>`:'',z=o.zero?`<line x1="${M.l}" x2="${W-M.r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--ink)" stroke-dasharray="4 3"/>`:'';
+  const d=pts.map((p,i)=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.6" fill="var(--s0)" fill-opacity=".8"/>${o.hl&&o.hl.includes(i)?`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="8" fill="none" stroke="var(--s3)" stroke-width="2"/><text x="${x(p[0])+10}" y="${y(p[1])+4}" style="fill:var(--ink);font-size:10px">día ${i+1}</text>`:''}`).join('');
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${E(o.al||'Gráfica')}">${g}${xt}${z}${ln}${d}${axT(xl,yl)}</svg>`;}
+function bars(labs,sers,names,xl,yl){const mx=Math.max(...sers.flat())*1.2||1,sc=scale(0,mx),{y,g}=frame(sc),bw=(W-M.l-M.r)/labs.length,w=bw*.7/sers.length;
+  const b=labs.map((l,i)=>sers.map((s,j)=>{const xx=M.l+bw*i+bw*.15+w*j,yy=y(s[i]);return`<rect x="${xx}" y="${yy}" width="${w}" height="${y(0)-yy}" fill="${col(j)}" rx="2"/><text x="${xx+w/2}" y="${yy-4}" text-anchor="middle" style="fill:var(--ink);font-size:10px">${F(s[i],s[i]%1?2:0)}</text>`}).join('')+`<text x="${M.l+bw*(i+.5)}" y="${H-30}" text-anchor="middle">${E(l)}</text>`).join('');
+  return`<div class="legend">${names.map((n,j)=>`<span><span class="dot" style="background:${col(j)}"></span>${E(n)}</span>`).join('')}</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${E(yl)}">${g}${b}${axT(xl,yl)}</svg>`;}
+function venn(c){const t=(x,y,v)=>`<text x="${x}" y="${y}" text-anchor="middle" style="fill:var(--ink);font-size:15px;font-weight:700">${v}</text>`,ci=(x,y,k)=>`<circle cx="${x}" cy="${y}" r="88" fill="${col(k)}" fill-opacity=".22" stroke="${col(k)}" stroke-width="2"/>`;
+  return`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Diagrama de Venn"><rect x="${M.l-30}" y="6" width="${W-M.l-M.r+60}" height="${H-12}" fill="none" stroke="var(--line)"/>${ci(250,125,0)}${ci(350,125,1)}${ci(300,212,2)}${t(205,110,c.a)}${t(395,110,c.b)}${t(300,272,c.cc)}${t(300,95,c.ab)}${t(243,185,c.ac)}${t(357,185,c.bc)}${t(300,148,c.abc)}${t(560,285,'Ninguno: '+c.n0)}<text x="185" y="40" style="fill:var(--s0);font-weight:700;font-size:13px">A: latencia</text><text x="415" y="40" style="fill:var(--s1);font-weight:700;font-size:13px">B: descarga</text><text x="395" y="300" style="fill:var(--s2);font-weight:700;font-size:13px">C: pérdida</text></svg>`;}
+/* ---- Parte I ---- */
+function part1(D){const[a,b,c]=P.th,n=D.LB.length,A=D.LB.map(v=>v>a),B=D.VB.map(v=>v<b),C=D.PB.map(v=>v>c),cnt=f=>A.filter((_,i)=>f(A[i],B[i],C[i])).length;
+  const R={a:cnt((x,y,z)=>x&&!y&&!z),b:cnt((x,y,z)=>!x&&y&&!z),cc:cnt((x,y,z)=>!x&&!y&&z),ab:cnt((x,y,z)=>x&&y&&!z),ac:cnt((x,y,z)=>x&&!y&&z),bc:cnt((x,y,z)=>!x&&y&&z),abc:cnt((x,y,z)=>x&&y&&z),n0:cnt((x,y,z)=>!x&&!y&&!z)};
+  const tot=S(Object.values(R)),nA=A.filter(Boolean).length,nB=B.filter(Boolean).length,nC=C.filter(Boolean).length,nAB=R.ab+R.abc,nU=nA+nB-nAB,nABC=n-R.n0,pr=k=>k/n;
+  const pA=pr(nA),pB=pr(nB),pC=pr(nC),pAB=pr(nAB),pAgB=nAB/nB,pBgA=nAB/nA,mxv=Math.max(pA,pB,pC),mxN=pA===mxv?'A (latencia alta)':pB===mxv?'B (descarga lenta)':'C (pérdida alta)',empty=Object.values(R).some(v=>v===0);
+  const rows=[['P(A)',`${nA}/${n}`,pA,`El ${F(pA*100,1)} % de los días la latencia del Proveedor B supera ${a} ms.`],['P(B)',`${nB}/${n}`,pB,`El ${F(pB*100,1)} % de los días la descarga cae por debajo de ${b} Mbps.`],['P(C)',`${nC}/${n}`,pC,`El ${F(pC*100,1)} % de los días la pérdida de paquetes supera ${c} %.`],
+  ['P(A∩B)',`${nAB}/${n}`,pAB,'Días con latencia alta y descarga lenta a la vez.'],['P(A∪B)',`${nU}/${n}`,pr(nU),'Días con al menos uno de los dos problemas (latencia alta o descarga lenta).'],['P(Aᶜ)',`${n-nA}/${n}`,1-pA,`Días con latencia aceptable (≤ ${a} ms); es el complemento de A.`],
+  ['P(A|B)',`${nAB}/${nB}`,pAgB,'Entre los días con descarga lenta, la fracción que además tiene latencia alta.'],['P(B|A)',`${nAB}/${nA}`,pBgA,'Entre los días con latencia alta, la fracción que además tiene descarga lenta.'],['P(A∪B∪C)',`${nABC}/${n}`,pr(nABC),'Días con al menos un indicador fuera de umbral: el Proveedor B tuvo «un mal día».']];
+  const dif=pAgB-pA,ind=Math.abs(pAB-pA*pB)<.05;
+  return card('Parte I · Probabilidad y diagrama de Venn (Proveedor B, N = '+n+')',`${en('<p>El equipo de TI quiere saber con qué frecuencia el Proveedor B tiene un mal día. Cada día de monitoreo (N = 30) es una observación. Se definen tres eventos: <b>A:</b> latencia mayor a 35 ms. <b>B:</b> velocidad de descarga menor a 85 Mbps. <b>C:</b> pérdida de paquetes mayor a 2 %.</p><p><b>Se pide:</b> 1) Contar las frecuencias de cada región y dibujar el diagrama de Venn de tres eventos (la suma debe ser 30). 2) Calcular P(A), P(B), P(C), P(A∩B), P(A∪B), P(Aᶜ), P(A|B), P(B|A) y P(A∪B∪C). 3) Interpretar cada resultado en el contexto del servicio. 4) Responder: ¿qué evento es más probable? ¿B modifica la probabilidad de A (P(A) vs. P(A|B))? ¿Qué decisión de soporte o contratación se deriva?</p>')}<div class="row">${inp('t0',a,'A: latencia mayor a (ms)')}${inp('t1',b,'B: descarga menor a (Mbps)')}${inp('t2',c,'C: pérdida mayor a (%)')}</div>
+  <p class="cap">Los umbrales se pueden ajustar para que ninguna región del Venn quede vacía. ${empty?'<span class="err">Hay regiones vacías: ajusta algún umbral.</span>':'Con estos umbrales ninguna región queda vacía.'}</p>
+  <h2 style="margin-top:12px">1. Frecuencias por región</h2><div class="hg">${venn(R)}</div>
+  ${tbl(['Región','Frecuencia'],[['Solo A',R.a],['Solo B',R.b],['Solo C',R.cc],['A∩B (sin C)',R.ab],['A∩C (sin B)',R.ac],['B∩C (sin A)',R.bc],['A∩B∩C',R.abc],['Ninguno',R.n0],['<b>Suma</b>',`<b>${tot}</b> ${tot===n?'✓ (= '+n+')':'✗'}`]])}
+  <h2 style="margin-top:16px">2 y 3. Probabilidades e interpretación</h2>${fb('Fórmulas, sustitución y resultado',rows.map(r=>{const[u,v]=r[1].split('/');return mx(`${r[0]} <b>=</b> ${fr(u,v)} <b>=</b> ${F(r[2],4)}`)}).join(''))}${fb('Interpretación',li(rows.map(r=>`<b>${r[0]}:</b> ${r[3]}`)))}
+  <h2 style="margin-top:16px">4. Respuestas</h2>${li([`<b>Evento más probable:</b> ${mxN}, con P = ${F(mxv,4)}.`,`<b>¿B modifica a A?</b> P(A) = ${F(pA,4)} y P(A|B) = ${F(pAgB,4)}. ${dif>.02?`Saber que la descarga fue lenta <b>aumenta</b> la probabilidad de latencia alta en ${F(dif*100,1)} puntos porcentuales`:dif<-.02?`Saber que la descarga fue lenta <b>reduce</b> la probabilidad de latencia alta`:'Casi no cambia'}. Comparación con independencia: P(A)·P(B) = ${F(pA*pB,4)} vs. P(A∩B) = ${F(pAB,4)} → ${ind?'los eventos son aproximadamente independientes (la diferencia es pequeña para N = '+n+').':'los eventos <b>no</b> son independientes.'}`,
+  `<b>Decisión:</b> ${nABC/n>.5?`Más de la mitad de los días (${F(nABC/n*100,1)} %) el Proveedor B incumple algún umbral`:`El ${F(nABC/n*100,1)} % de los días el Proveedor B incumple algún umbral`}. ${dif>.02?'Como los problemas tienden a presentarse juntos, conviene reforzar el soporte con monitoreo conjunto de latencia y descarga y negociar un SLA con penalizaciones, o evaluar un proveedor alternativo si la tasa de fallas no baja.':'Como los problemas no se asocian claramente, el soporte debe atender cada indicador por separado; antes de contratar, conviene exigir al proveedor un SLA por indicador.'}`])}`);}
+/* ---- Parte II ---- */
+function p21(D){const[n,p]=P.bin,q=1-p,B=k=>binP(n,p,k),P0=B(0),P3=cum(B,3),P6=1-cum(B,6),mu=n*p,sg=Math.sqrt(n*p*q),obs=D.LB.filter(v=>v>30).length,ks=Array.from({length:n+1},(_,k)=>k);
+  return card('Problema 2.1 · Binomial',en('<p>El 50 % de los días, el Proveedor B tiene una latencia mayor a 30 ms (día lento). Se eligen 10 días al azar.</p><p>a) Probabilidad de que ningún día sea lento. b) Probabilidad de que a lo más 3 días sean lentos. c) Probabilidad de que más de 6 días sean lentos. d) Número esperado de días lentos y su desviación estándar.</p>')+steps([
+  step(1,'Datos',`<div class="row">${inp('bn',n,'n (días elegidos)','1')}${inp('bp',p,'p (día lento)','.01')}</div>${dg([['Variable','X = número de días lentos (latencia > 30 ms)'],['n',n],['p',p],['q = 1 − p',F(q,2)],['Dato observado',`${obs} de ${D.LB.length} días (${F(obs/D.LB.length*100,1)} %)`]])}`),
+  step(2,'Fórmula',fb('Distribución binomial',mx('P(X = k) <b>=</b> C(n, k)·p<sup>k</sup>·q<sup>n−k</sup>')+mx('μ <b>=</b> n·p')+mx('σ <b>=</b> √(n·p·q)'))),
+  step(3,'Sustitución y resultado',fb('a) Ningún día lento',mx(`P(X = 0) <b>=</b> C(${n}, 0)·${p}<sup>0</sup>·${F(q,2)}<sup>${n}</sup> <b>=</b> ${F(P0,4)}`,1))+fb('b) A lo más 3 días lentos',mx(`P(X ≤ 3) <b>=</b> Σ P(X = k), k = 0…3 <b>=</b> ${F(P3,4)}`,1))+fb('c) Más de 6 días lentos',mx(`P(X > 6) <b>=</b> 1 − P(X ≤ 6) <b>=</b> ${F(P6,4)}`,1))+fb('d) Esperanza y desviación estándar',mx(`μ <b>=</b> ${n}·${p} <b>=</b> ${F(mu,2)} días`)+mx(`σ <b>=</b> √(${n}·${p}·${F(q,2)}) <b>=</b> ${F(sg,4)} días`,1))),
+  step(4,'Gráfica',`<div class="hg">${bars(ks.map(String),[ks.map(B)],['P(X = k)'],'Días lentos (k)','Probabilidad')}</div>`),
+  step(5,'Interpretación',li([`La probabilidad de que ningún día sea lento es ${F(P0*100,2)} %; de que a lo más 3 lo sean, ${F(P3*100,1)} %; de que más de 6 lo sean, ${F(P6*100,1)} %.`,`En promedio se esperan ${F(mu,2)} días lentos, con una desviación de ${F(sg,2)} días.`]))]));}
+function p22(D){const a=P.th[2],al=D.PB.map(v=>v>a),nb=Math.floor(al.length/3),blk=Array.from({length:nb},(_,i)=>S(al.slice(i*3,i*3+3).map(Number))),tA=S(al.map(Number)),l=tA/nb,Q=k=>poiP(l,k),pa=Q(0),pb=1-Q(0)-Q(1),pc=cum(k=>poiP(2*l,k),3),of=[0,1,2,3].map(k=>blk.filter(v=>v===k).length),ex=[0,1,2,3].map(k=>nb*Q(k)),md=Math.max(...of.map((o,i)=>Math.abs(o-ex[i]))),vm=S(blk.map(v=>(v-mean(blk))**2))/(nb-1)/mean(blk);
+  return card('Problema 2.2 · Poisson',en('<p>El sistema de monitoreo del Proveedor B genera una alerta de soporte cada día que la pérdida de paquetes supera el 2 %. En los 30 días monitoreados hubo 12 alertas, es decir, en promedio 1.2 alertas cada 3 días.</p><p>a) Probabilidad de que no haya ninguna alerta en 3 días. b) Probabilidad de que haya al menos 2 alertas en 3 días. c) Probabilidad de que haya a lo más 3 alertas en 6 días. d) Con los 10 bloques de 3 días de los datos reales, calcula las frecuencias esperadas, 10·P(X = x), para x = 0, 1, 2 y 3, y compáralas con las observadas. ¿El modelo de Poisson describe bien lo que pasó?</p>')+steps([
+  step(1,'Datos',dg([['Variable',`X = alertas en 3 días (pérdida > ${a} %)`],['Alertas totales',`${tA} en ${al.length} días`],['Bloques de 3 días',nb],['λ (por 3 días)',`${tA}/${nb} = ${F(l,2)}`],['Alertas por bloque',blk.join(', ')]])),
+  step(2,'Fórmula',fb('Distribución de Poisson',mx(`P(X = x) <b>=</b> ${fr('e<sup>−λ</sup>·λ<sup>x</sup>','x!')}`)+mx('Para 6 días: λ₆ <b>=</b> 2·λ'))),
+  step(3,'Sustitución y resultado',fb('a) Ninguna alerta en 3 días',mx(`P(X = 0) <b>=</b> ${fr(`e<sup>−${F(l,2)}</sup>·${F(l,2)}<sup>0</sup>`,'0!')} <b>=</b> ${F(pa,4)}`,1))+fb('b) Al menos 2 alertas en 3 días',mx(`P(X ≥ 2) <b>=</b> 1 − P(0) − P(1) <b>=</b> 1 − ${F(Q(0),4)} − ${F(Q(1),4)} <b>=</b> ${F(pb,4)}`,1))+fb(`c) A lo más 3 alertas en 6 días (λ₆ = ${F(2*l,2)})`,mx(`P(X ≤ 3) <b>=</b> Σ P(X = x), x = 0…3 <b>=</b> ${F(pc,4)}`,1))),
+  step(4,'Frecuencias esperadas vs. observadas',`${tbl(['x (alertas en 3 días)','P(X = x)',`Esperada ${nb}·P`,'Observada','Diferencia'],[0,1,2,3].map((k,i)=>[k,F(Q(k),4),F(ex[i],2),of[i],F(of[i]-ex[i],2)]))}<div class="hg">${bars(['0','1','2','3'],[ex,of],['Esperada (Poisson)','Observada'],'Alertas en 3 días','Bloques')}</div><p class="cap">Índice de dispersión (varianza/media) = ${F(vm,2)}; en Poisson ideal ≈ 1.</p>`),
+  step(5,'Conclusión',li([`La mayor diferencia entre lo esperado y lo observado es de ${F(md,2)} bloques. ${md<=1.5&&vm<1.6?'El modelo de Poisson describe razonablemente bien lo ocurrido.':`El modelo de Poisson describe solo de forma aproximada lo ocurrido: con solo ${nb} bloques las frecuencias son pequeñas (por ejemplo, ningún bloque con 3 alertas contra ${F(ex[3],2)} esperados)${vm<.7?'; además las alertas están más repartidas de lo que predice Poisson (dispersión < 1).':'.'}`}`]))]));}
+function bell(m,s,a,b,mk,lab){const w=640,h=250,l=24,r=24,t=40,bt=h-52,x0=m-4*s,x1=m+4*s,X=v=>l+(w-l-r)*(v-x0)/(x1-x0),pf=v=>Math.exp(-(((v-m)/s)**2)/2),Y=v=>bt-(bt-t)*pf(v),N=120,pts=Array.from({length:N+1},(_,i)=>x0+(x1-x0)*i/N),line=pts.map((v,i)=>`${i?'L':'M'}${X(v).toFixed(1)},${Y(v).toFixed(1)}`).join(' '),lo=a==null?x0:Math.max(a,x0),hi=b==null?x1:Math.min(b,x1),sp=Array.from({length:61},(_,i)=>lo+(hi-lo)*i/60),sh=`M${X(lo).toFixed(1)},${bt} `+sp.map(v=>`L${X(v).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')+` L${X(hi).toFixed(1)},${bt} Z`,tk=[-3,-2,-1,0,1,2,3].map(k=>{const v=m+k*s;return`<line x1='${X(v)}' x2='${X(v)}' y1='${bt}' y2='${bt+5}' class='ax'/><text x='${X(v)}' y='${bt+18}' text-anchor='middle'>${F(v,1)}</text>`}).join('');
+  return`<svg viewBox='0 0 ${w} ${h}' role='img' aria-label='${E(lab)}'><text x='${l}' y='18' style='fill:var(--ink);font-size:13px;font-weight:700'>${E(lab)}</text><text x='${w-r}' y='18' text-anchor='end'>Desviación estándar σ = ${F(s,2)}</text><path d='${line} L${X(x1)},${bt} L${X(x0)},${bt} Z' fill='var(--s0)' fill-opacity='.14'/><path d='${sh}' fill='var(--s3)' fill-opacity='.5'/><path d='${line}' fill='none' stroke='var(--s0)' stroke-width='2.5'/><line x1='${l}' x2='${w-r}' y1='${bt}' y2='${bt}' stroke='var(--ink)'/>${tk}<line x1='${X(m)}' x2='${X(m)}' y1='${bt}' y2='${Y(m)}' stroke='var(--ink)' stroke-dasharray='3 3'/><text x='${X(m)}' y='${bt+36}' text-anchor='middle' style='fill:var(--ink)'>Media μ = ${F(m,2)}</text>${mk.map(v=>`<line x1='${X(v)}' x2='${X(v)}' y1='${bt}' y2='${Y(v)-4}' stroke='var(--s3)' stroke-width='2'/><text x='${X(v)}' y='${Y(v)-8}' text-anchor='middle' style='fill:var(--s3);font-weight:700'>${F(v,2)} ms</text>`).join('')}</svg>`;}
+function p23(D){const m=mean(D.LA),s=Math.sqrt(S(D.LA.map(v=>(v-m)**2))/(D.LA.length-1)),N=D.LA.length,z1=(30-m)/s,z2=(40-m)/s,q1=Phi(z1),q2=1-Phi(z2),zc=zinv(.95),lim=m+zc*s,o2=D.LA.filter(v=>v>40).length,o1=D.LA.filter(v=>v<30).length;
+  const A=z=>Math.round((Phi(z)-.5)*1e4)/1e4,r2=v=>Math.round(Math.abs(v)*100)/100,rw=v=>Math.floor(Math.round(r2(v)*100)/10)/10,cl=v=>Math.round((r2(v)-rw(v))*100)/100,za=r2(z1),zb=r2(z2),Aa=A(za),Ab=A(zb),pa=.5-Aa,pb=.5-Ab,zl=Math.floor(zinv(.95)*100)/100,Al=A(zl),Ah=A(zl+.01),zt=zl+(.45-Al)/(Ah-Al)*.01,xt=m+zt*s,hl=[za,zb,zl,Math.round((zl+.01)*100)/100],cs=Array.from({length:10},(_,c)=>c/100),zt_=tbl(['z',...cs.map(c=>F(c,2))],Array.from({length:35},(_,r)=>r/10).map(r=>[F(r,1),...cs.map(c=>{const z=Math.round((r+c)*100)/100,v=F(A(z),4);return hl.includes(z)?`<b style="background:var(--acc);color:#fff;padding:2px 5px;border-radius:4px">${v}</b>`:v})]));
+  return card('Problema 2.3 · Normal (latencia del Proveedor A)',en('<p>La latencia del Proveedor A se comporta de forma aproximadamente normal con μ = 37.58 ms y σ = 5.10 ms (calculadas con los 30 días monitoreados).</p><p>a) Probabilidad de que la latencia de un día sea menor a 30 ms. b) Probabilidad de que la latencia de un día sea mayor a 40 ms. c) Latencia a partir de la cual se encuentra el 5 % de los días más lentos (límite para activar una alerta de soporte). d) Calcula cuántos días se esperan con latencia mayor a 40 ms y con latencia menor a 30 ms (probabilidad × 30) y compáralos con los observados: 11 días y 1 día. ¿El modelo normal describe bien lo que pasó?</p>')+steps([
+  step(1,'Datos',dg([['Variable','X = latencia diaria del Proveedor A (ms)'],['n',`${N} días`],['μ (media)',F(m,2)+' ms'],['σ (desv. estándar)',F(s,2)+' ms'],['Observados',`${o2} días > 40 ms · ${o1} día(s) < 30 ms`]])),
+  step(2,'Fórmula',fb('Estandarización',mx(`Z <b>=</b> ${fr('X − μ','σ')}`)+mx('X <b>=</b> μ + Z·σ')+mx('Tabla Z: A(z) = área entre 0 y z; P(Z &lt; −z) = P(Z > z) = 0.5 − A(z)'))),
+  step(3,'Sustitución y resultado (con la tabla Z)',fb('a) Latencia menor a 30 ms',mx(`Z <b>=</b> ${fr(`30 − ${F(m,2)}`,F(s,2))} <b>=</b> ${F(z1,3)} ≈ ${F(-za,2)}`)+mx(`Tabla Z: fila ${F(rw(z1),1)}, columna ${F(cl(z1),2)} → A(${F(za,2)}) <b>=</b> ${F(Aa,4)}`)+mx(`P(X &lt; 30) <b>=</b> P(Z &lt; ${F(-za,2)}) <b>=</b> 0.5 − ${F(Aa,4)} <b>=</b> ${F(pa,4)}`,1)+`<p class="cap">Valor exacto sin redondear Z: ${F(q1,4)}. La pequeña diferencia viene de redondear Z a 2 decimales para usar la tabla.</p>`)+fb('b) Latencia mayor a 40 ms',mx(`Z <b>=</b> ${fr(`40 − ${F(m,2)}`,F(s,2))} <b>=</b> ${F(z2,3)} ≈ ${F(zb,2)}`)+mx(`Tabla Z: fila ${F(rw(z2),1)}, columna ${F(cl(z2),2)} → A(${F(zb,2)}) <b>=</b> ${F(Ab,4)}`)+mx(`P(X > 40) <b>=</b> P(Z > ${F(zb,2)}) <b>=</b> 0.5 − ${F(Ab,4)} <b>=</b> ${F(pb,4)}`,1)+`<p class="cap">Valor exacto sin redondear Z: ${F(q2,4)}.</p>`)+fb('c) El 5 % de días más lentos (percentil 95)',mx('Área entre 0 y Z <b>=</b> 0.5 − 0.05 <b>=</b> 0.45')+mx(`Tabla Z: A(${F(zl,2)}) <b>=</b> ${F(Al,4)} y A(${F(zl+.01,2)}) <b>=</b> ${F(Ah,4)} → Z <b>=</b> ${F(zt,3)}`)+mx(`X <b>=</b> ${F(m,2)} + ${F(zt,3)}·${F(s,2)} <b>=</b> ${F(xt,2)} ms`,1))),
+  step(4,'Tabla Z consultada',`<p class="cap">Tabla de la normal estándar: A(z) es el área entre 0 y z. Las celdas resaltadas son las que se usaron en los incisos a), b) y c).</p><details class="dt"><summary>Ver tabla Z (área entre 0 y z)</summary><div style="max-height:360px;overflow:auto">${zt_}</div></details>`),
+  step(4,'Gráficas de la curva normal',`<p class="cap">El área sombreada en rosa es la probabilidad de cada inciso (el área total bajo la curva es 1).</p><div class="hg">${bell(m,s,null,30,[30],'a) P(X < 30) = '+F(pa,4))}</div><div class="hg">${bell(m,s,40,null,[40],'b) P(X > 40) = '+F(pb,4))}</div><div class="hg">${bell(m,s,xt,null,[xt],'c) 5 % de días más lentos: X ≥ '+F(xt,2)+' ms')}</div>`),
+  step(6,'Días esperados vs. observados',`${tbl(['Evento','Probabilidad',`Esperados (×${N})`,'Observados','Diferencia'],[['Latencia > 40 ms',F(pb,4),F(pb*N,2),o2,F(o2-pb*N,2)],['Latencia &lt; 30 ms',F(pa,4),F(pa*N,2),o1,F(o1-pa*N,2)]])}<div class="hg">${bars(['> 40 ms','< 30 ms'],[[pb*N,pa*N],[o2,o1]],['Esperados (Normal)','Observados'],'Evento','Días')}</div>`),
+  step(7,'Conclusión',li([`${Math.abs(o2-pb*N)<=2&&Math.abs(o1-pa*N)<=2?'Las diferencias son de pocos días: el modelo normal describe bien lo que pasó.':'Hay diferencias de varios días: el modelo normal describe solo de forma aproximada lo que pasó.'} Con solo ${N} días, el azar explica diferencias de 1 o 2 días. A partir de ${F(xt,2)} ms conviene activar la alerta de soporte.`]))]));}
+/* ---- Parte III ---- */
+function resTxt(R,x){const n=R.n,ord=R.yh.map((v,i)=>i).sort((i,j)=>R.yh[i]-R.yh[j]),th=[0,1,2].map(k=>mean(ord.slice(Math.floor(k*n/3),Math.floor((k+1)*n/3)).map(i=>R.e[i]))),dw=S(R.e.slice(1).map((v,i)=>(v-R.e[i])**2))/S(R.e.map(v=>v*v)),sd=a=>Math.sqrt(S(a.map(v=>v*v))/a.length),h=Math.floor(n/2),s1=sd(ord.slice(0,h).map(i=>R.e[i])),s2=sd(ord.slice(h).map(i=>R.e[i])),sk=S(R.e.map(v=>v**3))/n/(S(R.e.map(v=>v*v))/n)**1.5,w2=R.e.filter(v=>Math.abs(v)<=2*R.se).length/n;
+  return li([`<b>Linealidad:</b> residual medio en tercios de valores estimados: ${th.map(v=>F(v,2)).join(' / ')} ms. ${th.every(v=>Math.abs(v)<R.se*.6)?'Sin curvatura marcada.':'Hay cierto patrón (curvatura), la recta no captura todo.'}`,`<b>Independencia:</b> Durbin-Watson = ${F(dw,2)} (≈ 2 indica sin autocorrelación entre días). ${dw>1.5&&dw<2.5?'Se cumple.':'Posible dependencia entre días consecutivos.'}`,`<b>Normalidad:</b> asimetría = ${F(sk,2)}; ${F(w2*100,0)} % de residuales dentro de ±2 errores estándar. ${Math.abs(sk)<1&&w2>=.9?'Razonable.':'Hay residuales extremos que alejan la distribución de la normal.'}`,`<b>Homocedasticidad:</b> desviación de residuales en estimados bajos = ${F(s1,2)} y en altos = ${F(s2,2)} (razón ${F(s2/s1,1)}). ${s2/s1<2&&s1/s2<2?'Se cumple de forma aceptable.':'La dispersión crece con el nivel estimado (heterocedasticidad).'}`]);}
+function part3(D){const x=D.PB,y=D.LB,n=x.length,R=simple(x,y),xm=mean(x),ym=mean(y),mnx=Math.min(...x),mxx=Math.max(...x),ix=[5,17].filter(i=>i<n),keep=x.map((_,i)=>!ix.includes(i)),x2=x.filter((_,i)=>keep[i]),y2=y.filter((_,i)=>keep[i]),R2=simple(x2,y2),pr=P.sp.map(v=>R.b0+R.b1*v),str=R.r2>.7?'fuerte':R.r2>.4?'moderada':'débil';
+  const sums=['Σ','X','Y','XY','X²','Y²'],tb=tbl(['Día','X','Y','XY','X²','Y²'],[...x.map((v,i)=>[i+1,F(v,2),F(y[i],1),F(v*y[i],2),F(v*v,3),F(y[i]**2,2)]),['<b>Σ</b>',F(R.sx,2),F(R.sy,1),F(R.sxy,2),F(R.sxx,3),F(R.syy,2)]]);
+  const z0=v=>Math.abs(v)<1e-9?0:v,rt=tbl(['Día','X (%)','Y (ms)','Ŷ','e = Y − Ŷ','e²','X − X̄','(X − X̄)²'],[...x.map((v,i)=>[i+1,F(v,2),F(y[i],1),F(R.yh[i],2),F(R.e[i],2),F(R.e[i]**2,2),F(v-xm,3),F((v-xm)**2,3)]),['<b>Σ</b>','','','',`<b>${F(z0(S(R.e)),2)}</b>`,`<b>${F(R.sse,2)}</b>`,`<b>${F(z0(S(x.map(v=>v-xm))),2)}</b>`,`<b>${F(S(x.map(v=>(v-xm)**2)),2)}</b>`]]);
+  const cmp=tbl(['Modelo','n','r','R²','b₁','b₀','Error est.'],[['Con los 30 días',R.n,F(R.r,4),F(R.r2,4),F(R.b1,3),F(R.b0,3),F(R.se,3)],['Sin días 6 y 18',R2.n,F(R2.r,4),F(R2.r2,4),F(R2.b1,3),F(R2.b0,3),F(R2.se,3)]]);
+  const big=Math.abs(R.r2-R2.r2)>.15||Math.abs(R.b1-R2.b1)/Math.abs(R.b1)>.25;
+  return card('Parte III · Regresión lineal simple (Proveedor B)',en('<p>El equipo de soporte técnico sospecha que, cuando el Proveedor B pierde más paquetes, también tarda más en responder, porque tiene que reenviar lo que se perdió. Quiere comprobar si la pérdida de paquetes permite estimar la latencia. Se usan los 30 días de monitoreo del Proveedor B: <b>X</b> = pérdida de paquetes (%), <b>Y</b> = latencia (ms).</p><p><b>Se pide:</b> los 10 pasos que se desarrollan a continuación.</p>')+steps([
+  step(1,'Identificar las variables',`<p>X = pérdida de paquetes (%), la variable que explica. Y = latencia (ms), la que se quiere estimar. Tiene sentido que X influya en Y: cuando se pierden paquetes hay que reenviarlos, y eso añade tiempo de respuesta.</p>`),
+  step(2,'Tabla de sumas y diagrama de dispersión',`${dg([['n',n],['ΣX',F(R.sx,2)],['ΣY',F(R.sy,1)],['ΣXY',F(R.sxy,2)],['ΣX²',F(R.sxx,3)],['ΣY²',F(R.syy,2)]])}<details class="dt"><summary>Ver tabla completa de sumas</summary><div style="max-height:360px;overflow:auto">${tb}</div></details><div class="hg">${xy(x.map((v,i)=>[v,y[i]]),'Pérdida de paquetes (%)','Latencia (ms)',{line:[mnx,R.b0+R.b1*mnx,mxx,R.b0+R.b1*mxx],hl:ix,al:'Dispersión pérdida vs latencia'})}</div>`),
+  step(3,'Pendiente b₁',`${fb('Fórmula',mx(`b₁ <b>=</b> ${fr('nΣXY − ΣXΣY','nΣX² − (ΣX)²')}`))}${fb('Sustitución y resultado',mx(`b₁ <b>=</b> ${fr(`${n}·${F(R.sxy,2)} − ${F(R.sx,2)}·${F(R.sy,1)}`,`${n}·${F(R.sxx,3)} − ${F(R.sx,2)}²`)} <b>=</b> ${F(R.b1,4)}`,1))}`),
+  step(4,'Intercepto b₀',`${fb('Fórmula y sustitución',mx('b₀ <b>=</b> Ȳ − b₁·X̄')+mx(`b₀ <b>=</b> ${F(ym,3)} − ${F(R.b1,4)}·${F(xm,3)} <b>=</b> ${F(R.b0,4)}`,1))}`),
+  step(5,'Ecuación',`${fb('Ecuación de regresión',mx(`Ŷ <b>=</b> ${F(R.b0,3)} ${R.b1<0?'−':'+'} ${F(Math.abs(R.b1),3)}·X`,1))}`),
+  step(6,'Interpretación',`<p><b>b₁:</b> por cada 1 % más de pérdida de paquetes, la latencia aumenta en promedio ${F(R.b1,2)} ms. <b>b₀:</b> la latencia estimada sin pérdida sería ${F(R.b0,2)} ms. La pérdida observada va de ${F(mnx,2)} % a ${F(mxx,2)} %, así que X = 0 queda fuera del rango y b₀ es solo una referencia matemática.</p>`),
+  step(7,'Correlación y R²',`${fb('Fórmulas',mx(`r <b>=</b> ${fr('nΣXY − ΣXΣY','√[(nΣX² − (ΣX)²)(nΣY² − (ΣY)²)]')}`)+mx('R² <b>=</b> r²')+mx(`Error estándar <b>=</b> √${fr('Σe²','n − 2')}`))}${fb('Sustitución y resultado',mx(`r <b>=</b> ${fr(`${n}·${F(R.sxy,2)} − ${F(R.sx,2)}·${F(R.sy,1)}`,`√[(${n}·${F(R.sxx,3)} − ${F(R.sx,2)}²)(${n}·${F(R.syy,2)} − ${F(R.sy,1)}²)]`)} <b>=</b> ${F(R.r,4)}`)+mx(`R² <b>=</b> ${F(R.r,4)}² <b>=</b> ${F(R.r2,4)}`)+mx(`Error estándar <b>=</b> ${F(R.se,3)} ms`,1))}<p>La relación es positiva y ${str}: la pérdida de paquetes explica el ${F(R.r2*100,1)} % de la variación de la latencia; el resto depende de otros factores. Prueba t de la pendiente: t = ${F(R.t,3)}, gl = ${n-2}, valor p ${PF(R.p)} → la relación ${R.p<.05?'<b>es significativa</b>':'no es significativa'} (α = 0.05).</p>`),
+  step(8,'Predicción',`<div class="row">${P.sp.map((v,i)=>inp('sp'+i,v,['Pérdida baja (%)','Pérdida media (%)','Pérdida alta (%)'][i])).join('')}</div>${tbl(['Pérdida X (%)','Latencia estimada Ŷ (ms)','¿Dentro del rango?'],P.sp.map((v,i)=>[F(v,2),F(pr[i],2),v>=mnx&&v<=mxx?'Interpolación':'<span class="err">Extrapolación</span>']))}`),
+  step(9,'Residuales',`<details class="dt"><summary>Ver los 30 residuales</summary><div style="max-height:360px;overflow:auto">${rt}</div></details>${fb('Cálculo con los valores de la tabla',mx(`Error estándar <b>=</b> √${fr('Σe²','n − 2')} <b>=</b> √${fr(F(R.sse,2),n-2)} <b>=</b> ${F(R.se,3)} ms`)+mx(`EE(b₁) <b>=</b> ${fr('Error estándar','√Σ(X − X̄)²')} <b>=</b> ${fr(F(R.se,3),'√'+F(R.sxx-R.sx*R.sx/n,2))} <b>=</b> ${F(R.sb,4)}`)+mx(`t <b>=</b> ${fr('b₁','EE(b₁)')} <b>=</b> ${fr(F(R.b1,4),F(R.sb,4))} <b>=</b> ${F(R.t,3)}`)+mx(`Valor p <b>=</b> 2·P(T > |t|), gl = ${n-2} <b>=</b> ${PF(R.p)}`,1))}<div class="hg">${xy(R.yh.map((v,i)=>[v,R.e[i]]),'Latencia estimada Ŷ (ms)','Residual e (ms)',{zero:1,hl:ix,al:'Residuales vs estimados'})}</div>${resTxt(R,x)}`),
+  step(10,'Datos atípicos (sin los días 6 y 18)',`${cmp}<p class="cap">Los días 6 y 18 tienen latencia y pérdida muy altas (marcados en la dispersión). Cambio de la pendiente: ${F(R.b1,2)} → ${F(R2.b1,2)} ms por %; de R²: ${F(R.r2,3)} → ${F(R2.r2,3)}.</p><p><b>Decisión:</b> ${big?'los dos días atípicos influyen mucho en el modelo (puntos de alta influencia), así que no se eliminan sin más: son fallas reales del proveedor. Se reportan ambos modelos, el completo describe los incidentes y el reducido la operación normal, y se recomienda investigar la causa de esos días antes de decidir excluirlos.':'los resultados cambian poco, así que el modelo es estable y se conserva el análisis con los 30 días, ya que los días 6 y 18 son datos reales y no errores de captura.'}</p>`)]));}
+/* ---- Parte IV ---- */
+function part4(D){const n=D.LB.length,X=D.PB.map((v,i)=>[v,D.VB[i]]),M4=multi(X,D.LB),b=M4.b,r1=[Math.min(...D.PB),Math.max(...D.PB)],r2=[Math.min(...D.VB),Math.max(...D.VB)],nm=['Intercepto b₀','Pérdida X₁ (%)','Descarga X₂ (Mbps)'],sg=M4.pv.map(p=>p<.05),pr=P.sc.map(s=>b[0]+b[1]*s[0]+b[2]*s[1]);
+  const ty=(a,r)=>a>=r[0]&&a<=r[1];
+  return card('Parte IV · Regresión lineal múltiple (Proveedor B)',en('<p>El equipo de soporte técnico desea estimar el tiempo de respuesta (latencia) del Proveedor B para anticipar fallos en la red. Para ello, se analiza la latencia diaria (Y, en milisegundos) a partir de dos variables de red: la pérdida de paquetes (X₁, en porcentaje) y la velocidad de descarga (X₂, en Mbps). Se utilizan los 30 días de monitoreo (N = 30).</p><p><b>Se pide:</b> 1) Ajuste con las dos variables. 2) Interpretación de los valores p. 3) Modelo ajustado e interpretación de cada coeficiente. 4) Predicciones en tres escenarios (operación baja, habitual y alta demanda), indicando si es interpolación o extrapolación.</p>')+steps([
+  step(1,'Ajuste con las dos variables',`<p>Y = latencia (ms), X₁ = pérdida de paquetes (%), X₂ = velocidad de descarga (Mbps); N = ${n}. Mínimos cuadrados (mismo resultado que Excel: Análisis de datos › Regresión).</p>${tbl(['Término','Coeficiente','Error estándar','t','Valor p'],b.map((v,i)=>[nm[i],F(v,4),F(M4.se[i],4),F(M4.t[i],3),PF(M4.pv[i])]))}${tbl(['R²','R² ajustado','Error estándar','F','gl','Valor p (F)'],[[F(M4.r2,4),F(M4.r2a,4),F(M4.s,3),F(M4.F,2),`2 y ${M4.df}`,PF(M4.pF)]])}`),
+  step(2,'Interpretación de los valores p',`${li([`<b>Modelo global:</b> F = ${F(M4.F,2)}, p ${PF(M4.pF)} → ${M4.pF<.05?'el modelo en conjunto es significativo':'el modelo no es significativo'}.`,`<b>Pérdida de paquetes (X₁):</b> p ${PF(M4.pv[1])} → ${sg[1]?'aporta información significativa':'no aporta información significativa'} (α = 0.05).`,`<b>Descarga (X₂):</b> p ${PF(M4.pv[2])} → ${sg[2]?'aporta información significativa':'<b>no</b> aporta información significativa una vez considerada la pérdida'}. ${sg[2]?'':'En la práctica, la pérdida de paquetes ya explica casi todo lo que la descarga podría aportar (ambas se mueven juntas), por lo que X₂ podría omitirse.'}`])}`),
+  step(3,'Modelo ajustado',`${fb('Ecuación ajustada',mx(`Ŷ <b>=</b> ${F(b[0],3)} ${b[1]<0?'−':'+'} ${F(Math.abs(b[1]),3)}·X₁ ${b[2]<0?'−':'+'} ${F(Math.abs(b[2]),3)}·X₂`,1))}${li([`<b>b₁ = ${F(b[1],3)}:</b> manteniendo constante la descarga, cada 1 % más de pérdida de paquetes ${b[1]>0?'aumenta':'reduce'} la latencia en promedio ${F(Math.abs(b[1]),2)} ms.`,`<b>b₂ = ${F(b[2],3)}:</b> manteniendo constante la pérdida, cada 1 Mbps más de descarga ${b[2]<0?'reduce':'aumenta'} la latencia en promedio ${F(Math.abs(b[2]),3)} ms.`,`<b>b₀ = ${F(b[0],2)}:</b> latencia estimada con pérdida 0 % y descarga 0 Mbps; es solo una referencia, fuera del rango observado.`])}`),
+  step(4,'Predicciones (escenarios)',`<p class="cap">Rango observado: pérdida ${F(r1[0],2)} % a ${F(r1[1],2)} %; descarga ${F(r2[0],1)} a ${F(r2[1],1)} Mbps.</p><div class="row">${P.sc.map((s,i)=>inp('s'+i+'a',s[0],['Baja: pérdida (%)','Habitual: pérdida (%)','Alta demanda: pérdida (%)'][i])+inp('s'+i+'b',s[1],['Baja: descarga (Mbps)','Habitual: descarga (Mbps)','Alta demanda: descarga (Mbps)'][i])).join('')}</div>${tbl(['Escenario','X₁ (%)','X₂ (Mbps)','Latencia estimada (ms)','Tipo'],P.sc.map((s,i)=>[['Operación baja','Operación habitual','Alta demanda'][i],F(s[0],2),F(s[1],1),F(pr[i],2),ty(s[0],r1)&&ty(s[1],r2)?'Interpolación':'<span class="err">Extrapolación</span>']))}<p class="cap">Un escenario también sería extrapolación si combina valores que nunca ocurrieron juntos, aunque cada uno esté dentro de su rango.</p>`)]));}
+/* ---- render ---- */
+const NAV=[['all','★','Informe completo','Partes I a IV'],['1','1','Parte I','Probabilidad y Venn'],['2a','2','Problema 2.1','Binomial'],['2b','3','Problema 2.2','Poisson'],['2c','4','Problema 2.3','Normal'],['3','5','Parte III','Regresión simple'],['4','6','Parte IV','Regresión múltiple']],MAP={1:part1,'2a':p21,'2b':p22,'2c':p23,3:part3,4:part4};
+function render(){const el=$('v-proj'),D=getD(),nav=`<div class="card"><h2>Problema</h2><div class="pg">${NAV.map(n=>`<button type="button" class="pk${P.part===n[0]?' on':''}" data-p="${n[0]}" aria-pressed="${P.part===n[0]}"><span class="pn">${n[1]}</span><span class="pt">${n[2]}</span><span class="ps">${n[3]}</span></button>`).join('')}</div></div>`;
+  if(!D.LB||!D.VB||!D.PB||!D.LA||new Set([D.LB.length,D.VB.length,D.PB.length]).size>1){el.innerHTML=nav+card('Faltan datos','<p>Se necesitan los KPIs «Latencia», «Velocidad de descarga» y «Pérdida de paquetes» con columnas «Proveedor A» y «Proveedor B» (mismo número de días) en la pestaña «Estadística descriptiva».</p>');return;}
+  el.innerHTML=nav+(P.part==='all'?Object.values(MAP).map(f=>f(D)).join(''):MAP[P.part](D))+`<div class="card"><div class="row" style="margin:0"><button class="b" id="pj_pdf">Descargar informe en PDF</button></div><div class="cap" id="pj_msg" role="status"></div></div>`;}
+const PM=[[/μ/g,'mu'],[/σ/g,'sigma'],[/λ/g,'lambda'],[/α/g,'alfa'],[/Σ/g,'Suma '],[/Ŷ/g,'Y^'],[/Ȳ/g,'Y-barra'],[/X̄/g,'X-barra'],[/∩/g,' y '],[/∪/g,' o '],[/ᶜ/g,'c'],[/≤/g,'<='],[/≥/g,'>='],[/[−–—⁻]/g,'-'],[/→/g,'->'],[/√/g,'raiz '],[/ᵏ/g,'k'],[/ⁿ/g,'n'],[/ˣ/g,'x'],[/₀/g,'0'],[/₁/g,'1'],[/₂/g,'2'],[/✓/g,'(ok)'],[/✗/g,'(no)'],[/★/g,''],[/…/g,'...'],[/≈/g,'~']];
+async function pdf(){const m=$('pj_msg'),D=getD();if(!window.jspdf){m.textContent='No se pudo cargar la librería de PDF.';return;}
+  try{m.textContent='Generando PDF…';let t=Object.values(MAP).map(f=>f(D)).join('<hr>').replace(/<svg[\s\S]*?<\/svg>/g,'').replace(/<\/(tr|li|p|div|h2|h3|hr)>|<hr>/g,'\n').replace(/<\/t[dh]>/g,' | ').replace(/<sup>/g,'^').replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');PM.forEach(([a,b])=>{t=t.replace(a,b);});t=t.replace(/[^\x00-\xFF]/g,'?');
+    const d=new window.jspdf.jsPDF({unit:'pt',format:'letter'});let y=56;d.setFont('helvetica','bold');d.setFontSize(15);d.text('Probabilidad - Informe de resultados',40,y);y+=22;d.setFont('helvetica','normal');d.setFontSize(9);
+    t.split('\n').map(s=>s.replace(/\s+/g,' ').trim()).filter(Boolean).forEach(l=>d.splitTextToSize(l,532).forEach(x=>{if(y>745){d.addPage();y=50;}d.text(x,40,y);y+=12;}));
+    await dl('probabilidad.pdf',d.output('blob'));m.textContent='PDF listo (texto y cifras; las gráficas se ven en pantalla).';}catch(e){m.textContent='No se pudo generar el PDF.';}}
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('#v-proj .pk');if(t){P.part=t.dataset.p;render();}else if(e.target.id==='pj_pdf')pdf();});
+document.addEventListener('change',e=>{const t=e.target;if(!t.classList||!t.classList.contains('pi'))return;const id=t.dataset.id,v=parseFloat(t.value);if(!Number.isFinite(v))return;
+  if(/^t\d$/.test(id))P.th[+id[1]]=v;else if(id==='bn')P.bin[0]=Math.max(1,Math.round(v));else if(id==='bp')P.bin[1]=Math.min(1,Math.max(0,v));else if(/^sp\d$/.test(id))P.sp[+id[2]]=v;else if(/^s\d[ab]$/.test(id))P.sc[+id[1]][id[2]==='a'?0:1]=v;render();});
+window.projRefresh=render;
+})();
+</script>
+</body>
+</html>
+
+</body></html>
